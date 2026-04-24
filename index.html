@@ -2,273 +2,775 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>📖 برنامج متابعة حفظ القرآن</title>
+  <title>🌸 برنامج متابعة حفظ القرآن الكريم</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* ======================================== */
+    /* التصميم الأصلي كما كان - نسخة وردية كاملة */
+    /* ======================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    :root {
+      --pink-bg:      #FDE8F0;
+      --pink-header:  #F4A7C3;
+      --pink-dark:    #D4537E;
+      --pink-light:   #FAD4E5;
+      --pink-mid:     #F07AA0;
+      --pink-btn:     #ED93B1;
+      --blush:        #FBD0E2;
+      --mauve:        #C97B9E;
+      --gold:         #F5C842;
+      --white:        #ffffff;
+    }
+
     body {
       font-family: 'Amiri', serif;
-      background: #FDF2F7;
       direction: rtl;
+      background-color: var(--pink-bg);
+      background-image: radial-gradient(circle, #FAC8DC 1.5px, transparent 1.5px);
+      background-size: 35px 35px;
+      min-height: 100vh;
       padding: 10px;
     }
-    .container {
-      max-width: 100%;
-      margin: 0 auto;
-    }
+
     /* شاشة تسجيل الدخول */
-    .login-screen {
+    .auth-screen {
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #FCE4EC, #F8BBD0);
-      padding: 15px;
+      background: var(--pink-bg);
+      background-image: radial-gradient(circle, #FAC8DC 1.5px, transparent 1.5px);
+      background-size: 35px 35px;
+      padding: 16px;
     }
-    .login-card {
-      background: white;
-      border-radius: 35px;
-      padding: 35px 25px;
+
+    .auth-card {
+      background: var(--white);
+      padding: 2rem 1.5rem;
+      border-radius: 32px;
+      box-shadow: 0 20px 35px rgba(212, 83, 126, 0.15);
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       text-align: center;
-      box-shadow: 0 20px 35px rgba(212, 83, 126, 0.2);
     }
-    .login-card h2 {
-      color: #D4537E;
-      font-size: 28px;
+
+    .auth-card h2 {
+      color: var(--pink-dark);
       margin-bottom: 25px;
+      font-size: 28px;
     }
-    .login-card input {
+
+    .auth-card input {
       width: 100%;
       padding: 14px;
-      margin: 10px 0;
-      border: 2px solid #F4A7C3;
-      border-radius: 50px;
+      margin: 8px 0;
+      border-radius: 30px;
+      border: 1.5px solid var(--pink-header);
+      font-family: 'Amiri', serif;
       font-size: 16px;
-      font-family: 'Amiri';
       background: #fff;
       outline: none;
-      text-align: center;
+      transition: all 0.3s;
     }
-    .login-card button {
-      background: linear-gradient(135deg, #D4537E, #F07AA0);
+
+    .auth-card input:focus {
+      border-color: var(--pink-dark);
+      box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.1);
+    }
+
+    .auth-card button {
+      background: linear-gradient(135deg, var(--pink-dark), var(--pink-mid));
       color: white;
       border: none;
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-size: 18px;
-      font-family: 'Amiri';
+      padding: 12px 25px;
+      border-radius: 40px;
       margin: 8px 5px;
       cursor: pointer;
-      transition: 0.3s;
+      font-family: 'Amiri', serif;
+      font-size: 17px;
+      font-weight: bold;
+      transition: transform 0.2s;
     }
-    .login-card button:active {
-      transform: scale(0.97);
+
+    .auth-card button:active {
+      transform: scale(0.96);
     }
-    .login-card button:last-child {
-      background: #F4A7C3;
+
+    .auth-card button:last-child {
+      background: var(--pink-header);
     }
-    .error-msg {
-      color: #e74c3c;
+
+    .auth-msg {
+      color: #d9534f;
       margin-top: 15px;
-      font-size: 14px;
+      font-size: 13px;
     }
+
     /* التطبيق الرئيسي */
     .app-screen {
       display: none;
     }
-    .header {
-      background: linear-gradient(135deg, #F8BBD0, #FFD1B3);
-      border-radius: 25px;
-      padding: 15px;
+
+    .wrapper {
+      max-width: 100%;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .title-bar {
+      background: linear-gradient(135deg, #F4C0D1 0%, #FAC775 100%);
+      border-radius: 20px;
+      padding: 12px 15px;
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
+      border: 2px solid var(--pink-header);
+      box-shadow: 0 6px 18px rgba(212, 83, 126, 0.12);
     }
-    .header h1 {
+
+    .title-bar h1 {
+      font-size: clamp(18px, 5vw, 24px);
       color: #72243E;
-      font-size: 22px;
+      font-weight: 700;
+      margin: 8px 0;
     }
-    .stats {
+
+    .title-bar p {
+      font-size: clamp(12px, 3.5vw, 14px);
+      color: #993556;
+    }
+
+    .deco-row {
       display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
+      justify-content: center;
+      gap: 6px;
+      font-size: clamp(14px, 4vw, 20px);
+      margin: 5px 0;
+    }
+
+    /* الإحصائيات */
+    .stats-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      justify-content: center;
       flex-wrap: wrap;
     }
-    .stat-box {
-      background: white;
-      border-radius: 20px;
-      padding: 10px;
-      flex: 1;
+
+    .stat-card {
+      background: var(--white);
+      border: 1.5px solid var(--pink-header);
+      border-radius: 16px;
+      padding: 8px 12px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      flex: 1;
+      min-width: 70px;
+      box-shadow: 0 2px 10px rgba(212, 83, 126, 0.08);
     }
-    .stat-number {
-      font-size: 24px;
-      font-weight: bold;
-      color: #D4537E;
+
+    .stat-num {
+      font-size: clamp(16px, 4vw, 22px);
+      font-weight: 700;
+      color: var(--pink-dark);
     }
+
+    .stat-lbl {
+      font-size: clamp(9px, 2.5vw, 11px);
+      color: var(--mauve);
+      margin-top: 3px;
+    }
+
+    /* شريط التقدم */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.5);
+      padding: 6px 12px;
+      border-radius: 40px;
+    }
+
+    .progress-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--pink-dark);
+      min-width: 42px;
+    }
+
     .progress-bar {
-      background: #FCE4EC;
-      border-radius: 20px;
-      height: 12px;
-      margin: 10px 0;
+      flex: 1;
+      height: 10px;
+      background: var(--blush);
+      border-radius: 10px;
       overflow: hidden;
+      border: 1px solid var(--pink-header);
     }
+
     .progress-fill {
-      background: #D4537E;
-      width: 0%;
       height: 100%;
-      transition: width 0.3s;
+      background: linear-gradient(90deg, var(--pink-mid), var(--pink-dark));
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.4s ease;
     }
-    .months-scroll {
+
+    /* تبويبات الشهور */
+    .month-tabs-wrap {
       overflow-x: auto;
-      margin: 10px 0;
-      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 12px;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
     }
-    .month-btn {
-      background: white;
-      border: 1.5px solid #F4A7C3;
+
+    .month-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      min-width: max-content;
+      padding: 2px;
+    }
+
+    .month-tab-btn {
       padding: 8px 18px;
-      border-radius: 30px;
-      margin: 0 4px;
-      font-family: 'Amiri';
+      border-radius: 40px;
+      border: 1.5px solid var(--pink-header);
+      background: var(--white);
+      color: #993556;
+      font-family: 'Amiri', serif;
+      font-size: clamp(12px, 3vw, 14px);
       cursor: pointer;
-      display: inline-block;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.2s;
     }
-    .month-btn.active {
-      background: #D4537E;
-      color: white;
+
+    .month-tab-btn:active {
+      transform: scale(0.96);
     }
-    .table-wrapper {
+
+    .month-tab-btn.active {
+      background: linear-gradient(135deg, var(--pink-dark), var(--mauve));
+      color: var(--white);
+      border-color: var(--pink-dark);
+      box-shadow: 0 3px 12px rgba(212, 83, 126, 0.35);
+      font-weight: 700;
+    }
+
+    /* تبويبات الأيام */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 7px 16px;
+      border-radius: 22px;
+      border: 1.5px solid var(--pink-header);
+      background: var(--white);
+      color: #993556;
+      font-family: 'Amiri', serif;
+      font-size: clamp(12px, 2.5vw, 14px);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:active {
+      transform: scale(0.96);
+    }
+
+    .tab-btn.active {
+      background: var(--pink-dark);
+      color: var(--white);
+      border-color: var(--pink-dark);
+      box-shadow: 0 3px 10px rgba(212, 83, 126, 0.3);
+    }
+
+    /* الجدول */
+    .table-scroll {
       overflow-x: auto;
-      border-radius: 20px;
-      background: white;
+      border-radius: 16px;
+      border: 1.5px solid var(--pink-header);
+      box-shadow: 0 4px 16px rgba(212, 83, 126, 0.1);
+      -webkit-overflow-scrolling: touch;
     }
+
     table {
       width: 100%;
-      min-width: 600px;
+      min-width: 650px;
       border-collapse: collapse;
+      font-size: clamp(11px, 3vw, 14px);
+      background: var(--white);
     }
-    th {
-      background: #F4A7C3;
-      color: white;
-      padding: 10px;
+
+    thead tr {
+      background: linear-gradient(135deg, var(--pink-header), var(--pink-mid));
+    }
+
+    thead th {
+      padding: 10px 6px;
+      font-weight: 700;
+      color: var(--white);
+      border: 1px solid var(--pink-btn);
+      font-size: clamp(10px, 2.5vw, 13px);
+      text-align: center;
       white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-    td {
-      border: 1px solid #FCE4EC;
-      padding: 8px;
+
+    tbody tr:nth-child(odd) {
+      background: var(--blush);
+    }
+
+    tbody tr:nth-child(even) {
+      background: #FDF0F5;
+    }
+
+    tbody tr:hover {
+      background: var(--pink-light);
+    }
+
+    tbody td {
+      padding: 8px 5px;
+      border: 1px solid var(--pink-light);
       text-align: center;
       vertical-align: middle;
     }
+
+    /* دائرة اليوم */
     .day-circle {
-      background: #D4537E;
-      color: white;
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
+      background: var(--pink-dark);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(212, 83, 126, 0.25);
     }
-    .check-btn {
-      width: 30px;
-      height: 30px;
+
+    /* صناديق الاختيار */
+    .check-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .checkbox-custom {
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      border: 2px solid #F4A7C3;
-      background: white;
+      border: 2px solid var(--pink-header);
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
+      background: var(--white);
+      transition: all 0.2s;
+      font-size: 16px;
+      color: transparent;
+      user-select: none;
     }
-    .check-btn.done {
-      background: #D4537E;
-      color: white;
+
+    .checkbox-custom:active {
+      transform: scale(0.92);
     }
+
+    .checkbox-custom.checked {
+      background: var(--pink-dark);
+      border-color: var(--pink-dark);
+      color: var(--white);
+    }
+
+    /* تقييم النجوم */
+    .star-rating {
+      display: flex;
+      gap: 3px;
+      justify-content: center;
+      flex-wrap: nowrap;
+    }
+
     .star {
-      font-size: 22px;
+      font-size: clamp(16px, 4.5vw, 20px);
       cursor: pointer;
-      color: #ddd;
+      color: #E8D0DA;
+      transition: transform 0.1s;
+      user-select: none;
     }
-    .star.active {
-      color: #F5C842;
+
+    .star:active {
+      transform: scale(1.2);
     }
-    textarea {
+
+    .star.filled {
+      color: var(--gold);
+    }
+
+    /* Textareas */
+    .wide-textarea,
+    .notes-textarea {
       width: 100%;
-      padding: 5px;
+      min-height: 38px;
+      overflow: hidden;
+      border: 1.5px solid var(--pink-light);
       border-radius: 12px;
-      border: 1px solid #F4A7C3;
-      font-family: 'Amiri';
-      resize: vertical;
-      background: #fff;
+      padding: 6px 8px;
+      font-family: 'Amiri', serif;
+      font-size: clamp(11px, 2.5vw, 13px);
+      background: var(--white);
+      color: #444;
+      direction: rtl;
+      resize: none;
+      line-height: 1.5;
     }
+
+    .wide-textarea:focus,
+    .notes-textarea:focus {
+      outline: none;
+      border-color: var(--pink-dark);
+      box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.1);
+    }
+
+    .td-notes {
+      min-width: 120px;
+      width: 16%;
+    }
+
+    .td-wide {
+      min-width: 110px;
+      width: 13%;
+    }
+
+    /* حقل مع زر تم */
+    .field-done-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .done-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .done-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--pink-header);
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: transparent;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .done-check:active {
+      transform: scale(0.92);
+    }
+
+    .done-check.done {
+      background: var(--pink-dark);
+      border-color: var(--pink-dark);
+      color: var(--white);
+    }
+
+    .done-check.coffee-check {
+      font-size: 16px;
+      color: #c9a96e;
+      border-color: #d4a96a;
+      background: #fff8f0;
+      width: 28px;
+      height: 28px;
+    }
+
+    .done-check.coffee-check.done {
+      background: linear-gradient(135deg, #7b4f2e, #c47d3a);
+      border-color: #7b4f2e;
+      color: var(--white);
+    }
+
+    .done-lbl {
+      font-size: 10px;
+      color: var(--mauve);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* قائمة الأحزاب */
+    .hizb-wrap {
+      position: relative;
+      min-width: 100px;
+    }
+
+    .hizb-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 6px 8px;
+      border: 1.5px solid var(--pink-header);
+      border-radius: 12px;
+      background: var(--white);
+      cursor: pointer;
+      font-family: 'Amiri', serif;
+      font-size: clamp(10px, 2.5vw, 12px);
+      color: var(--mauve);
+      text-align: right;
+    }
+
+    .hizb-selected {
+      color: var(--pink-dark);
+      font-weight: 700;
+      font-size: clamp(9px, 2.5vw, 11px);
+      flex: 1;
+      text-align: right;
+    }
+
+    .hizb-panel {
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      z-index: 999;
+      background: var(--white);
+      border: 1.5px solid var(--pink-header);
+      border-radius: 16px;
+      box-shadow: 0 8px 28px rgba(212, 83, 126, 0.2);
+      width: min(320px, 85vw);
+    }
+
+    .hizb-panel.hidden {
+      display: none;
+    }
+
+    .hizb-search {
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      border-bottom: 1px solid var(--pink-light);
+      font-family: 'Amiri', serif;
+      font-size: 13px;
+      direction: rtl;
+      background: var(--blush);
+      border-radius: 16px 16px 0 0;
+      outline: none;
+    }
+
+    .hizb-list {
+      list-style: none;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 5px 0;
+    }
+
+    .hizb-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--mauve);
+      direction: rtl;
+    }
+
+    .hizb-item.selected {
+      background: var(--pink-light);
+      color: var(--pink-dark);
+      font-weight: 700;
+    }
+
+    .hizb-chk {
+      font-size: 14px;
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* لوحة المشرف */
+    .admin-panel {
+      background: var(--blush);
+      padding: 12px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .admin-panel select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 30px;
+      font-family: 'Amiri', serif;
+      font-size: 14px;
+      border: 1px solid var(--pink-header);
+      background: white;
+    }
+
+    /* التذييل */
+    .bottom-deco {
+      text-align: center;
+      font-size: clamp(16px, 5vw, 24px);
+      margin-top: 20px;
+      letter-spacing: 6px;
+      opacity: 0.7;
+    }
+
+    /* زر الخروج */
+    .logout-btn {
+      background: var(--pink-dark);
+      color: white;
+      border: none;
+      padding: 8px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: 'Amiri', serif;
+      font-size: 14px;
+      margin-top: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* استجابة للشاشات الصغيرة */
     @media (max-width: 550px) {
-      .stat-number { font-size: 18px; }
-      .header h1 { font-size: 18px; }
-      td { padding: 5px; }
+      body {
+        padding: 6px;
+      }
+      .stat-card {
+        padding: 5px 8px;
+        min-width: 60px;
+      }
+      .stat-num {
+        font-size: 14px;
+      }
+      .stat-lbl {
+        font-size: 8px;
+      }
+      .tab-btn {
+        padding: 6px 12px;
+      }
+      .day-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
+      .done-lbl {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- شاشة تسجيل الدخول -->
-<div id="loginSection" class="login-screen">
-  <div class="login-card">
-    <h2>🌸 تسجيل الدخول</h2>
-    <input type="email" id="email" placeholder="📧 البريد الإلكتروني">
-    <input type="password" id="password" placeholder="🔒 كلمة المرور">
-    <button id="loginButton">✨ دخول</button>
-    <button id="signupButton">🆕 إنشاء حساب</button>
-    <div id="loginError" class="error-msg"></div>
+<!-- ==================== شاشة تسجيل الدخول ==================== -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div style="font-size: 48px; margin-bottom: 10px;">🌸</div>
+    <h2>تسجيل الدخول</h2>
+    <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني">
+    <input type="password" id="loginPassword" placeholder="🔒 كلمة المرور">
+    <button id="loginBtn">✨ دخول</button>
+    <button id="signupBtn">🆕 إنشاء حساب</button>
+    <div id="authMsg" class="auth-msg"></div>
   </div>
 </div>
 
-<!-- التطبيق الأساسي -->
-<div id="appSection" class="app-screen">
-  <div class="container">
-    <div class="header">
-      <h1>🌸 برنامج متابعة حفظ القرآن 🌸</h1>
-      <p>سجّلي تقدمك يومًا بيوم 💕</p>
+<!-- ==================== التطبيق الرئيسي ==================== -->
+<div id="appScreen" class="app-screen">
+  <div class="wrapper">
+    <div class="title-bar">
+      <div class="deco-row">🎀 ✨ 🎀 ✨ 🎀</div>
+      <h1>🌸 برنامج متابعة حفظ القرآن الكريم 🌸</h1>
+      <p>سجّلي تقدمك يوماً بيوم بإذن الله 💕</p>
+      <div class="deco-row">🦋 🌷 💖 🌷 🦋</div>
     </div>
 
-    <div class="stats">
-      <div class="stat-box"><div class="stat-number" id="totalDone">0</div><div>الإنجاز</div></div>
-      <div class="stat-box"><div class="stat-number" id="totalPercent">0%</div><div>النسبة</div></div>
-      <div class="stat-box"><div class="stat-number" id="monthPercent">0%</div><div>نسبة الشهر</div></div>
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="progress-wrap">
+      <span class="progress-label" id="progressLabel">0%</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
     </div>
 
-    <div class="progress-bar"><div class="progress-fill" id="globalProgress"></div></div>
+    <!-- لوحة المشرف (تظهر فقط للمشرف) -->
+    <div id="adminPanel" class="admin-panel">
+      <h3 style="color: var(--pink-dark); margin-bottom: 8px;">👩‍🏫 لوحة المشرف</h3>
+      <select id="studentSelect">
+        <option value="">-- اختر طالباً --</option>
+      </select>
+      <div id="adminMsg" style="margin-top: 8px; color: var(--pink-dark); font-size: 12px;"></div>
+      <button id="logoutBtnAdmin" class="logout-btn" style="margin-top: 10px;">🚪 تسجيل خروج</button>
+    </div>
 
-    <div class="months-scroll" id="monthsList"></div>
+    <!-- تبويبات الشهور -->
+    <div class="month-tabs-wrap">
+      <div class="month-tabs" id="monthTabs"></div>
+    </div>
 
-    <div class="table-wrapper">
-      <table id="trackTable">
+    <!-- تبويبات الأيام -->
+    <div class="tabs" id="tabs"></div>
+
+    <!-- الجدول -->
+    <div class="table-scroll">
+      <table id="mainTable">
         <thead>
-          <tr><th>اليوم</th><th>🕌 الحفظ</th><th>📖 مراجعة قريبة</th><th>📚 مراجعة بعيدة</th><th>📝 مراجعة عامة</th><th>✏️ تجويد</th><th>⭐ التقييم</th><th>🎧 الشيخ</th></tr>
+          <tr>
+            <th>اليوم</th>
+            <th>🕌 الحفظ</th>
+            <th>📖 المراجعة القريبة</th>
+            <th>📚 المراجعة البعيدة</th>
+            <th>📝 المراجعة العامة</th>
+            <th>✏️ ملاحظات التجويد</th>
+            <th>⭐ تقييم التجويد</th>
+            <th>🎧 سماع الشيخ</th>
+          </tr>
         </thead>
         <tbody id="tableBody"></tbody>
-      能有
+      </table>
     </div>
-    <div style="text-align: center; margin-top: 20px;">
-      <button id="logoutMain" style="background: #D4537E; color: white; border: none; padding: 8px 25px; border-radius: 30px;">🚪 تسجيل خروج</button>
-    </div>
+
+    <div class="bottom-deco">🎀 🌸 💝 🌸 🎀 🌸 💝 🌸 🎀</div>
+
+    <button id="logoutMainBtn" class="logout-btn" style="margin-top: 15px;">🚪 تسجيل خروج</button>
   </div>
 </div>
 
 <script type="module">
-  // -------------------- Firebase --------------------
+  // ============================================================
+  // Firebase Configuration
+  // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB05Tm0hfd1-RAiLzy0HwKSBFPIvDJqUJY",
@@ -282,21 +784,105 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  console.log("✅ Firebase ready");
+  console.log("✅ Firebase initialized");
 
-  // -------------------- بيانات الأشهر --------------------
-  const MONTHS = [
-    "ذو القعدة", "ذو الحجة", "محرم", "صفر", "ربيع الأول", "ربيع الثاني",
-    "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان", "رمضان", "شوال"
+  // ============================================================
+  // بيانات الأحزاب (60 حزب)
+  // ============================================================
+  const AHZAB = [
+    'الحزب 1 — الفاتحة : بسم الله الرحمن الرحيم',
+    'الحزب 2 — البقرة : أفتطمعون أن يؤمنوا لكم',
+    'الحزب 3 — البقرة : سيقول السفهاء من الناس ما ولاهم',
+    'الحزب 4 — البقرة : واذكروا الله في أيام معدودات',
+    'الحزب 5 — البقرة : تلك الرسل فضلنا بعضهم على بعض',
+    'الحزب 6 — آل عمران : قل أؤنبئكم بخير من ذلكم للذين اتقوا',
+    'الحزب 7 — آل عمران : كل الطعام كان حلا لبني إسرائيل',
+    'الحزب 8 — آل عمران : يستبشرون بنعمة من الله وفضل',
+    'الحزب 9 — النساء : والمحصنات من النساء إلا ما ملكت أيمانكم',
+    'الحزب 10 — النساء : فما لكم في المنافقين فئتين والله أركسهم',
+    'الحزب 11 — النساء : لا يحب الله الجهر بالسوء من القول',
+    'الحزب 12 — المائدة : واتل عليهم نبأ ابني آدم بالحق',
+    'الحزب 13 — المائدة : لتجدن أشد الناس عداوة للذين آمنوا اليهود',
+    'الحزب 14 — الأنعام : إنما يستجيب الذين يسمعون والموتى يبعثهم الله',
+    'الحزب 15 — الأنعام : ولو أننا نزلنا إليهم الملائكة وكلمهم الموتى',
+    'الحزب 16 — الأعراف : المص، كتاب أنزل إليك',
+    'الحزب 17 — الأعراف : قال الملأ الذين استكبروا من قومه لنخرجنك',
+    'الحزب 18 — الأعراف : وإذ نتقنا الجبل فوقهم كأنه ظلة',
+    'الحزب 19 — الأنفال : واعلموا أنما غنمتم من شيء فأن لله خمسه',
+    'الحزب 20 — التوبة : يا أيها الذين آمنوا إن كثيرا من الأحبار',
+    'الحزب 21 — التوبة : إنما السبيل على الذين يستأذنونك وهم أغنياء',
+    'الحزب 22 — يونس : للذين أحسنوا الحسنى وزيادة',
+    'الحزب 23 — هود : وما من دابة في الأرض إلا على الله رزقها',
+    'الحزب 24 — هود : وإلى مدين أخاهم شعيبا',
+    'الحزب 25 — يوسف : وما أبرئ نفسي إن النفس لأمارة بالسوء',
+    'الحزب 26 — الرعد : أفمن يعلم أنما أنزل إليك من ربك الحق',
+    'الحزب 27 — الحجر : الر تلك آيات الكتاب وقرآن مبين',
+    'الحزب 28 — النحل : وقال الله لا تتخذوا إلهين اثنين',
+    'الحزب 29 — الإسراء : سبحان الذي أسرى بعبده ليلا',
+    'الحزب 30 — الإسراء : أولم يروا أن الله الذي خلق السماوات',
+    'الحزب 31 — الكهف : قال ألم أقل لك إنك لن تستطيع',
+    'الحزب 32 — طه : طه، ما أنزلنا عليك القرآن لتشقى',
+    'الحزب 33 — الأنبياء : اقترب للناس حسابهم وهم في غفلة معرضون',
+    'الحزب 34 — الحج : يا أيها الناس اتقوا ربكم إن زلزلة',
+    'الحزب 35 — المؤمنون : قد أفلح المؤمنون، الذين هم في',
+    'الحزب 36 — النور : يا أيها الذين آمنوا لا تتبعوا خطوات',
+    'الحزب 37 — الفرقان : وقال الذين لا يرجون لقاءنا',
+    'الحزب 38 — الشعراء : قالوا أنؤمن لك واتبعك الأرذلون',
+    'الحزب 39 — النمل : فما كان جواب قومه إلا أن قالوا',
+    'الحزب 40 — القصص : ولقد وصلنا لهم القول لعلهم يتذكرون',
+    'الحزب 41 — العنكبوت : ولا تجادلوا أهل الكتاب إلا بالتي هي أحسن',
+    'الحزب 42 — لقمان : ومن يسلم وجهه إلى الله وهو محسن',
+    'الحزب 43 — الأحزاب : ومن يقنت منكن لله ورسوله وتعمل صالحا',
+    'الحزب 44 — سبأ : قل من يرزقكم من السماوات والأرض',
+    'الحزب 45 — يس : وما أنزلنا على قومه من بعده من جند',
+    'الحزب 46 — الصافات : فنبذناه بالعراء وهو سقيم',
+    'الحزب 47 — الزمر : فمن أظلم ممن كذب على الله وكذب',
+    'الحزب 48 — غافر : ويا قوم ما لي أدعوكم إلى النجاة',
+    'الحزب 49 — فصلت : إليه يرد علم الساعة',
+    'الحزب 50 — الزخرف : قال أولو جئتكم بأهدى مما وجدتم',
+    'الحزب 51 — الأحقاف : حم، تنزيل الكتاب من الله العزيز الحكيم',
+    'الحزب 52 — الفتح : لقد رضي الله عن المؤمنين إذ يبايعونك',
+    'الحزب 53 — الذاريات : قال فما خطبكم أيها المرسلون',
+    'الحزب 54 — الرحمن : الرحمن، علم القرآن',
+    'الحزب 55 — المجادلة : قد سمع الله قول التي تجادلك',
+    'الحزب 56 — الجمعة : يسبح لله ما في السماوات وما في الأرض',
+    'الحزب 57 — الملك : تبارك الذي بيده الملك',
+    'الحزب 58 — الجن : قل أوحي إلي أنه استمع نفر من الجن',
+    'الحزب 59 — النبأ : عم يتساءلون، عن النبإ العظيم',
+    'الحزب 60 — الأعلى : سبح اسم ربك الأعلى، الذي خلق فسوى'
   ];
-  const DAYS_IN_MONTH = [30, 30, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29];
 
+  // الشهور الهجرية
+  const MONTHS = [
+    { name: 'ذو القعدة',    emoji: '🌙', days: 30 },
+    { name: 'ذو الحجة',     emoji: '🕌', days: 30 },
+    { name: 'محرم',          emoji: '🌟', days: 30 },
+    { name: 'صفر',           emoji: '🌸', days: 29 },
+    { name: 'ربيع الأول',   emoji: '🌺', days: 30 },
+    { name: 'ربيع الثاني',  emoji: '🌷', days: 29 },
+    { name: 'جمادى الأولى', emoji: '💕', days: 30 },
+    { name: 'جمادى الثانية',emoji: '🎀', days: 29 },
+    { name: 'رجب',           emoji: '✨', days: 30 },
+    { name: 'شعبان',         emoji: '💫', days: 29 },
+    { name: 'رمضان',         emoji: '🌙', days: 30 },
+    { name: 'شوال',          emoji: '🎉', days: 29 }
+  ];
+
+  // ============================================================
+  // متغيرات عامة
+  // ============================================================
+  let currentMonth = 0;
+  let currentPage = 0;
   let currentUserId = null;
-  let currentMonthIndex = 0;
-  let userData = {};  // تخزين مؤقت لبيانات المستخدم
+  let currentUserEmail = null;
+  let isAdmin = false;
+  let viewingStudentId = null;
+  let data = {};
 
-  // -------------------- تحميل وحفظ البيانات --------------------
-  async function loadUserData(userId) {
+  // ============================================================
+  // دوال Firebase
+  // ============================================================
+  async function loadDataFromFirebase(userId) {
     if (!userId) return {};
     try {
       const docRef = doc(db, "students", userId);
@@ -305,282 +891,493 @@
         return docSnap.data().trackingData || {};
       }
       return {};
-    } catch(e) {
-      console.error("خطأ بالتحميل:", e);
+    } catch (e) {
+      console.error("خطأ في التحميل:", e);
       return {};
     }
   }
 
-  async function saveUserData(userId, dataObj) {
+  async function saveDataToFirebase(userId, newData) {
     if (!userId) return;
     try {
       const docRef = doc(db, "students", userId);
-      await setDoc(docRef, { trackingData: dataObj, email: auth.currentUser?.email }, { merge: true });
-    } catch(e) {
-      console.error("خطأ بالحفظ:", e);
+      await setDoc(docRef, { trackingData: newData, email: currentUserEmail }, { merge: true });
+    } catch (e) {
+      console.error("خطأ في الحفظ:", e);
     }
   }
 
-  // -------------------- دوال الحصول على القيم --------------------
-  function getValue(day, field) {
-    const key = `m${currentMonthIndex}_d${day}_${field}`;
-    return userData[key] || "";
+  async function loadAllStudents() {
+    if (!isAdmin) return [];
+    try {
+      const querySnapshot = await getDocs(collection(db, "students"));
+      const students = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        students.push({
+          id: doc.id,
+          email: data.email || doc.id,
+          trackingData: data.trackingData || {}
+        });
+      });
+      return students;
+    } catch (e) {
+      console.error("خطأ في جلب الطلاب:", e);
+      return [];
+    }
   }
 
-  async function setValue(day, field, val) {
-    const key = `m${currentMonthIndex}_d${day}_${field}`;
-    if (userData[key] === val) return;
-    userData[key] = val;
-    await saveUserData(currentUserId, userData);
+  // ============================================================
+  // دوال البيانات
+  // ============================================================
+  function getVal(month, day, col) {
+    const key = `m${month}_d${day}_${col}`;
+    return data[key] || '';
+  }
+
+  async function setVal(month, day, col, val) {
+    const key = `m${month}_d${day}_${col}`;
+    if (data[key] === val) return;
+    data[key] = val;
+    const userId = viewingStudentId || currentUserId;
+    if (userId) {
+      await saveDataToFirebase(userId, data);
+    }
     renderTable();
-    updateStatistics();
+    updateStats();
   }
 
-  // -------------------- واجهة المستخدم --------------------
-  function updateStatistics() {
-    let totalChecked = 0;
-    let totalItems = 0;
-    let monthChecked = 0;
-    let monthItems = 0;
-    const currentDays = DAYS_IN_MONTH[currentMonthIndex];
+  // ============================================================
+  // دوال واجهة المستخدم
+  // ============================================================
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  function makeCheckbox(month, day, col) {
+    const wrap = document.createElement('div');
+    wrap.className = 'check-wrap';
+    const box = document.createElement('div');
+    box.className = 'checkbox-custom' + (getVal(month, day, col) === '1' ? ' checked' : '');
+    box.textContent = getVal(month, day, col) === '1' ? '💗' : '';
+    box.addEventListener('click', async () => {
+      const checked = box.classList.toggle('checked');
+      box.textContent = checked ? '💗' : '';
+      await setVal(month, day, col, checked ? '1' : '');
+    });
+    wrap.appendChild(box);
+    return wrap;
+  }
+
+  function makeStars(month, day, col) {
+    const wrap = document.createElement('div');
+    wrap.className = 'star-rating';
+    const current = parseInt(getVal(month, day, col)) || 0;
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('span');
+      star.className = 'star' + (i <= current ? ' filled' : '');
+      star.textContent = '★';
+      star.addEventListener('click', async () => {
+        await setVal(month, day, col, String(i));
+        const allStars = wrap.querySelectorAll('.star');
+        allStars.forEach((s, idx) => s.classList.toggle('filled', idx < i));
+      });
+      wrap.appendChild(star);
+    }
+    return wrap;
+  }
+
+  function makeHizbSelect(month, day, col) {
+    const savedRaw = getVal(month, day, col);
+    const saved = savedRaw ? JSON.parse(savedRaw) : [];
+    const wrap = document.createElement('div');
+    wrap.className = 'hizb-wrap';
+    const btn = document.createElement('button');
+    btn.className = 'hizb-btn';
+    btn.type = 'button';
     
-    for (let m = 0; m < MONTHS.length; m++) {
-      const days = DAYS_IN_MONTH[m];
-      for (let d = 1; d <= days; d++) {
-        const rev_close = getValueFromMonth(m, d, "rev_close");
-        const sheikh = getValueFromMonth(m, d, "sheikh");
-        totalItems += 2;
-        if (rev_close === "1") totalChecked++;
-        if (sheikh === "1") totalChecked++;
-        
-        if (m === currentMonthIndex) {
-          monthItems += 2;
-          if (rev_close === "1") monthChecked++;
-          if (sheikh === "1") monthChecked++;
-        }
+    function updateBtnLabel() {
+      const currentVals = getVal(month, day, col) ? JSON.parse(getVal(month, day, col)) : [];
+      if (currentVals.length === 0) {
+        btn.innerHTML = '<span class="hizb-placeholder">اختاري الحزب 🌸</span><span class="hizb-arrow">▼</span>';
+      } else {
+        const nums = currentVals.map(i => AHZAB[i].match(/الحزب\s+[\d٠-٩]+/)[0]).join(' + ');
+        btn.innerHTML = `<span class="hizb-selected">${nums}</span><span class="hizb-arrow">▼</span>`;
       }
     }
+    updateBtnLabel();
     
-    let totalPercent = totalItems ? Math.round((totalChecked / totalItems) * 100) : 0;
-    let monthPercent = monthItems ? Math.round((monthChecked / monthItems) * 100) : 0;
+    const panel = document.createElement('div');
+    panel.className = 'hizb-panel hidden';
+    const search = document.createElement('input');
+    search.type = 'text';
+    search.className = 'hizb-search';
+    search.placeholder = '🔍 ابحثي...';
+    panel.appendChild(search);
+    const list = document.createElement('ul');
+    list.className = 'hizb-list';
     
-    document.getElementById("totalDone").innerHTML = `🌟 ${totalChecked}`;
-    document.getElementById("totalPercent").innerHTML = `${totalPercent}%`;
-    document.getElementById("monthPercent").innerHTML = `${monthPercent}%`;
-    document.getElementById("globalProgress").style.width = totalPercent + "%";
-  }
-  
-  function getValueFromMonth(monthIdx, day, field) {
-    const key = `m${monthIdx}_d${day}_${field}`;
-    return userData[key] || "";
-  }
-  
-  // بناء الجدول
-  function renderTable() {
-    const tbody = document.getElementById("tableBody");
-    if (!tbody) return;
-    tbody.innerHTML = "";
-    const daysCount = DAYS_IN_MONTH[currentMonthIndex];
-    
-    for (let day = 1; day <= daysCount; day++) {
-      const row = tbody.insertRow();
-      
-      // اليوم
-      const tdDay = row.insertCell(0);
-      const circle = document.createElement("div");
-      circle.className = "day-circle";
-      circle.innerText = day;
-      tdDay.appendChild(circle);
-      
-      // الحفظ
-      const tdSave = row.insertCell(1);
-      const textarea = document.createElement("textarea");
-      textarea.rows = 1;
-      textarea.placeholder = "ما حفظته...";
-      textarea.value = getValue(day, "hafiz");
-      textarea.oninput = async (e) => {
-        await setValue(day, "hafiz", e.target.value);
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
-      };
-      setTimeout(() => {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
-      }, 10);
-      tdSave.appendChild(textarea);
-      
-      // مراجعة قريبة
-      const tdRevClose = row.insertCell(2);
-      const closeBtn = document.createElement("div");
-      closeBtn.className = "check-btn" + (getValue(day, "rev_close") === "1" ? " done" : "");
-      closeBtn.innerText = getValue(day, "rev_close") === "1" ? "✓" : "";
-      closeBtn.onclick = async () => {
-        const newVal = getValue(day, "rev_close") === "1" ? "" : "1";
-        await setValue(day, "rev_close", newVal);
-        closeBtn.classList.toggle("done");
-        closeBtn.innerText = newVal === "1" ? "✓" : "";
-      };
-      tdRevClose.appendChild(closeBtn);
-      
-      // مراجعة بعيدة
-      const tdRevFar = row.insertCell(3);
-      const farText = document.createElement("textarea");
-      farText.rows = 1;
-      farText.placeholder = "الأحزاب...";
-      farText.value = getValue(day, "hizb");
-      farText.oninput = async (e) => {
-        await setValue(day, "hizb", e.target.value);
-        farText.style.height = "auto";
-        farText.style.height = farText.scrollHeight + "px";
-      };
-      setTimeout(() => {
-        farText.style.height = "auto";
-        farText.style.height = farText.scrollHeight + "px";
-      }, 10);
-      tdRevFar.appendChild(farText);
-      
-      // مراجعة عامة
-      const tdGeneral = row.insertCell(4);
-      const generalText = document.createElement("textarea");
-      generalText.rows = 1;
-      generalText.placeholder = "ملاحظات عامة...";
-      generalText.value = getValue(day, "rev_gen");
-      generalText.oninput = async (e) => {
-        await setValue(day, "rev_gen", e.target.value);
-        generalText.style.height = "auto";
-        generalText.style.height = generalText.scrollHeight + "px";
-      };
-      setTimeout(() => {
-        generalText.style.height = "auto";
-        generalText.style.height = generalText.scrollHeight + "px";
-      }, 10);
-      tdGeneral.appendChild(generalText);
-      
-      // تجويد
-      const tdTajweed = row.insertCell(5);
-      const tajweedText = document.createElement("textarea");
-      tajweedText.rows = 1;
-      tajweedText.placeholder = "ملاحظات التجويد...";
-      tajweedText.value = getValue(day, "notes");
-      tajweedText.oninput = async (e) => {
-        await setValue(day, "notes", e.target.value);
-        tajweedText.style.height = "auto";
-        tajweedText.style.height = tajweedText.scrollHeight + "px";
-      };
-      setTimeout(() => {
-        tajweedText.style.height = "auto";
-        tajweedText.style.height = tajweedText.scrollHeight + "px";
-      }, 10);
-      tdTajweed.appendChild(tajweedText);
-      
-      // النجوم
-      const tdStars = row.insertCell(6);
-      const starsContainer = document.createElement("div");
-      starsContainer.style.display = "flex";
-      starsContainer.style.gap = "3px";
-      starsContainer.style.justifyContent = "center";
-      const currentStars = parseInt(getValue(day, "stars")) || 0;
-      for (let s = 1; s <= 5; s++) {
-        const starSpan = document.createElement("span");
-        starSpan.className = "star" + (s <= currentStars ? " active" : "");
-        starSpan.innerHTML = "★";
-        starSpan.onclick = async () => {
-          await setValue(day, "stars", s.toString());
-          renderTable();
-        };
-        starsContainer.appendChild(starSpan);
-      }
-      tdStars.appendChild(starsContainer);
-      
-      // سماع الشيخ
-      const tdSheikh = row.insertCell(7);
-      const sheikhBtn = document.createElement("div");
-      sheikhBtn.className = "check-btn" + (getValue(day, "sheikh") === "1" ? " done" : "");
-      sheikhBtn.innerText = getValue(day, "sheikh") === "1" ? "✓" : "";
-      sheikhBtn.onclick = async () => {
-        const newVal = getValue(day, "sheikh") === "1" ? "" : "1";
-        await setValue(day, "sheikh", newVal);
-        sheikhBtn.classList.toggle("done");
-        sheikhBtn.innerText = newVal === "1" ? "✓" : "";
-      };
-      tdSheikh.appendChild(sheikhBtn);
+    function buildList(filter = '') {
+      list.innerHTML = '';
+      AHZAB.forEach((hizb, idx) => {
+        if (filter && !hizb.includes(filter)) return;
+        const currentVals = getVal(month, day, col) ? JSON.parse(getVal(month, day, col)) : [];
+        const li = document.createElement('li');
+        li.className = 'hizb-item' + (currentVals.includes(idx) ? ' selected' : '');
+        const chk = document.createElement('span');
+        chk.className = 'hizb-chk';
+        chk.textContent = currentVals.includes(idx) ? '💗' : '○';
+        const lbl = document.createElement('span');
+        lbl.textContent = hizb;
+        li.appendChild(chk);
+        li.appendChild(lbl);
+        li.addEventListener('click', async () => {
+          let vals = getVal(month, day, col) ? JSON.parse(getVal(month, day, col)) : [];
+          if (vals.includes(idx)) {
+            vals = vals.filter(v => v !== idx);
+          } else {
+            vals.push(idx);
+            vals.sort((a, b) => a - b);
+          }
+          await setVal(month, day, col, JSON.stringify(vals));
+          buildList(search.value);
+          updateBtnLabel();
+        });
+        list.appendChild(li);
+      });
     }
-    updateStatistics();
+    buildList();
+    search.addEventListener('input', () => buildList(search.value));
+    panel.appendChild(list);
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !panel.classList.contains('hidden');
+      document.querySelectorAll('.hizb-panel').forEach(p => p.classList.add('hidden'));
+      if (!isOpen) panel.classList.remove('hidden');
+    });
+    document.addEventListener('click', () => panel.classList.add('hidden'));
+    panel.addEventListener('click', e => e.stopPropagation());
+    wrap.appendChild(btn);
+    wrap.appendChild(panel);
+    return wrap;
   }
-  
-  // عرض الشهور
-  function renderMonths() {
-    const container = document.getElementById("monthsList");
+
+  function makeFieldWithDone(month, day, fieldCol, doneCol, type, placeholder) {
+    const wrap = document.createElement('div');
+    wrap.className = 'field-done-wrap';
+    let field;
+    if (type === 'textarea' || type === 'notes') {
+      field = document.createElement('textarea');
+      field.className = type === 'notes' ? 'notes-textarea' : 'wide-textarea';
+      field.placeholder = placeholder;
+      field.value = getVal(month, day, fieldCol);
+      field.rows = 1;
+      field.addEventListener('input', async () => {
+        await setVal(month, day, fieldCol, field.value);
+        autoResize(field);
+      });
+      requestAnimationFrame(() => autoResize(field));
+    } else if (type === 'hizb') {
+      field = makeHizbSelect(month, day, fieldCol);
+    }
+    const doneRow = document.createElement('div');
+    doneRow.className = 'done-row';
+    const isHafiz = doneCol === 'hafiz_done';
+    const doneBox = document.createElement('div');
+    const isDone = getVal(month, day, doneCol) === '1';
+    doneBox.className = 'done-check' + (isHafiz ? ' coffee-check' : '') + (isDone ? ' done' : '');
+    doneBox.textContent = isDone ? (isHafiz ? '☕' : '✓') : (isHafiz ? '🤍' : '');
+    doneBox.title = isHafiz ? 'كوباية قهوة لما تخلصي الحفظ ☕' : 'اضغطي للتأكيد على الإتمام';
+    const doneLbl = document.createElement('span');
+    doneLbl.className = 'done-lbl';
+    doneLbl.textContent = 'تم ✅';
+    doneBox.addEventListener('click', async () => {
+      const nowDone = doneBox.classList.toggle('done');
+      doneBox.textContent = nowDone ? (isHafiz ? '☕' : '✓') : (isHafiz ? '🤍' : '');
+      await setVal(month, day, doneCol, nowDone ? '1' : '');
+    });
+    doneLbl.addEventListener('click', () => doneBox.click());
+    doneRow.appendChild(doneBox);
+    doneRow.appendChild(doneLbl);
+    wrap.appendChild(field);
+    wrap.appendChild(doneRow);
+    return wrap;
+  }
+
+  function getPagesForMonth(totalDays) {
+    const pages = [];
+    pages.push({ label: '🌸 الأيام ١–١٠', start: 1, end: 10 });
+    pages.push({ label: '💕 الأيام ١١–٢٠', start: 11, end: 20 });
+    const endLabel = totalDays === 30 ? '٣٠' : '٢٩';
+    pages.push({ label: `🎀 الأيام ٢١–${endLabel}`, start: 21, end: totalDays });
+    return pages;
+  }
+
+  function renderMonthTabs() {
+    const container = document.getElementById('monthTabs');
     if (!container) return;
-    container.innerHTML = "";
-    MONTHS.forEach((month, idx) => {
-      const btn = document.createElement("div");
-      btn.className = "month-btn" + (idx === currentMonthIndex ? " active" : "");
-      btn.innerText = month;
-      btn.onclick = () => {
-        currentMonthIndex = idx;
-        renderMonths();
+    container.innerHTML = '';
+    MONTHS.forEach((m, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'month-tab-btn' + (idx === currentMonth ? ' active' : '');
+      btn.innerHTML = `${m.emoji} ${m.name}`;
+      btn.addEventListener('click', () => {
+        currentMonth = idx;
+        currentPage = 0;
+        renderMonthTabs();
+        renderPageTabs();
         renderTable();
-      };
+      });
       container.appendChild(btn);
     });
   }
-  
-  // -------------------- تسجيل الدخول والخروج --------------------
-  const loginSection = document.getElementById("loginSection");
-  const appSection = document.getElementById("appSection");
-  const loginBtn = document.getElementById("loginButton");
-  const signupBtn = document.getElementById("signupButton");
-  const logoutBtn = document.getElementById("logoutMain");
-  const emailInput = document.getElementById("email");
-  const passInput = document.getElementById("password");
-  const errorDiv = document.getElementById("loginError");
-  
-  loginBtn.onclick = async () => {
-    errorDiv.innerText = "جاري الدخول...";
-    try {
-      await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
-      errorDiv.innerText = "";
-    } catch(e) {
-      errorDiv.innerText = "فشل الدخول: " + e.message;
+
+  function renderPageTabs() {
+    const container = document.getElementById('tabs');
+    if (!container) return;
+    container.innerHTML = '';
+    const pages = getPagesForMonth(MONTHS[currentMonth].days);
+    pages.forEach((page, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn' + (idx === currentPage ? ' active' : '');
+      btn.textContent = page.label;
+      btn.addEventListener('click', () => {
+        currentPage = idx;
+        renderPageTabs();
+        renderTable();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    const pages = getPagesForMonth(MONTHS[currentMonth].days);
+    const { start, end } = pages[currentPage];
+    for (let day = start; day <= end; day++) {
+      const tr = document.createElement('tr');
+      
+      const tdDay = document.createElement('td');
+      const circle = document.createElement('div');
+      circle.className = 'day-circle';
+      circle.textContent = day;
+      tdDay.appendChild(circle);
+      tr.appendChild(tdDay);
+      
+      const tdHafiz = document.createElement('td');
+      tdHafiz.classList.add('td-wide');
+      tdHafiz.appendChild(makeFieldWithDone(currentMonth, day, 'hafiz', 'hafiz_done', 'textarea', 'اكتبي ما حفظتِه... 🌸'));
+      tr.appendChild(tdHafiz);
+      
+      const tdRevClose = document.createElement('td');
+      tdRevClose.appendChild(makeCheckbox(currentMonth, day, 'rev_close'));
+      tr.appendChild(tdRevClose);
+      
+      const tdRevFar = document.createElement('td');
+      tdRevFar.classList.add('td-wide');
+      tdRevFar.appendChild(makeFieldWithDone(currentMonth, day, 'hizb', 'hizb_done', 'hizb', ''));
+      tr.appendChild(tdRevFar);
+      
+      const tdRevGen = document.createElement('td');
+      tdRevGen.classList.add('td-wide');
+      tdRevGen.appendChild(makeFieldWithDone(currentMonth, day, 'rev_gen', 'rev_gen_done', 'textarea', 'اكتبي ملاحظات المراجعة... 💕'));
+      tr.appendChild(tdRevGen);
+      
+      const tdNotes = document.createElement('td');
+      tdNotes.classList.add('td-notes');
+      tdNotes.appendChild(makeFieldWithDone(currentMonth, day, 'notes', 'notes_done', 'notes', 'اكتبي ملاحظات التجويد... ✏️'));
+      tr.appendChild(tdNotes);
+      
+      const tdStars = document.createElement('td');
+      tdStars.appendChild(makeStars(currentMonth, day, 'stars'));
+      tr.appendChild(tdStars);
+      
+      const tdSheikh = document.createElement('td');
+      tdSheikh.appendChild(makeCheckbox(currentMonth, day, 'sheikh'));
+      tr.appendChild(tdSheikh);
+      
+      tbody.appendChild(tr);
     }
-  };
-  
-  signupBtn.onclick = async () => {
-    if (passInput.value.length < 6) {
-      errorDiv.innerText = "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
-      return;
+  }
+
+  function updateStats() {
+    let done = 0, total = 0, starsSum = 0, starsCount = 0;
+    MONTHS.forEach((m, mIdx) => {
+      for (let day = 1; day <= m.days; day++) {
+        ['rev_close', 'sheikh'].forEach(col => {
+          total++;
+          if (getVal(mIdx, day, col) === '1') done++;
+        });
+        const s = parseInt(getVal(mIdx, day, 'stars'));
+        if (s > 0) { starsSum += s; starsCount++; }
+      }
+    });
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    const avgStr = starsCount > 0 ? (starsSum / starsCount).toFixed(1) : '—';
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    if (progressFill) progressFill.style.width = pct + '%';
+    if (progressLabel) progressLabel.textContent = pct + '%';
+    
+    let mDone = 0, mTotal = 0;
+    const m = MONTHS[currentMonth];
+    for (let day = 1; day <= m.days; day++) {
+      ['rev_close', 'sheikh'].forEach(col => {
+        mTotal++;
+        if (getVal(currentMonth, day, col) === '1') mDone++;
+      });
     }
-    errorDiv.innerText = "جاري إنشاء الحساب...";
-    try {
-      await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
-      errorDiv.innerText = "تم إنشاء الحساب بنجاح!";
-    } catch(e) {
-      errorDiv.innerText = "خطأ: " + e.message;
+    const mPct = mTotal > 0 ? Math.round((mDone / mTotal) * 100) : 0;
+    
+    const statsRow = document.getElementById('statsRow');
+    if (statsRow) {
+      statsRow.innerHTML = `
+        <div class="stat-card"><div class="stat-num">🌟 ${done}</div><div class="stat-lbl">إجمالي الإنجاز</div></div>
+        <div class="stat-card"><div class="stat-num">💖 ${pct}%</div><div class="stat-lbl">نسبة السنة</div></div>
+        <div class="stat-card"><div class="stat-num">📅 ${mPct}%</div><div class="stat-lbl">نسبة الشهر</div></div>
+        <div class="stat-card"><div class="stat-num">⭐ ${avgStr}</div><div class="stat-lbl">متوسط التجويد</div></div>
+      `;
     }
-  };
-  
-  logoutBtn.onclick = async () => {
-    await signOut(auth);
-  };
-  
-  onAuthStateChanged(auth, async (user) => {
+  }
+
+  // ============================================================
+  // دوال تسجيل الدخول والمشرف
+  // ============================================================
+  async function showStudentView(userId, email) {
+    currentUserId = userId;
+    currentUserEmail = email;
+    isAdmin = false;
+    viewingStudentId = null;
+    
+    const userData = await loadDataFromFirebase(userId);
+    data = userData;
+    
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) adminPanel.style.display = 'none';
+    
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+    
+    currentMonth = 0;
+    currentPage = 0;
+    renderMonthTabs();
+    renderPageTabs();
+    renderTable();
+    updateStats();
+  }
+
+  async function showAdminView() {
+    isAdmin = true;
+    currentUserId = null;
+    
+    allStudents = await loadAllStudents();
+    
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) adminPanel.style.display = 'block';
+    
+    const studentSelect = document.getElementById('studentSelect');
+    if (studentSelect) {
+      studentSelect.innerHTML = '<option value="">-- اختر طالباً --</option>';
+      allStudents.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s.id;
+        option.textContent = s.email;
+        studentSelect.appendChild(option);
+      });
+      studentSelect.onchange = async () => {
+        const selectedId = studentSelect.value;
+        if (selectedId) {
+          const student = allStudents.find(s => s.id === selectedId);
+          if (student) {
+            viewingStudentId = selectedId;
+            data = student.trackingData || {};
+            currentMonth = 0;
+            currentPage = 0;
+            renderMonthTabs();
+            renderPageTabs();
+            renderTable();
+            updateStats();
+            const adminMsg = document.getElementById('adminMsg');
+            if (adminMsg) adminMsg.innerHTML = `👩‍🏫 تعرض الآن بيانات: ${student.email}`;
+          }
+        }
+      };
+    }
+    
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+  }
+
+  function onAuthChange(user) {
+    console.log("Auth changed:", user ? user.email : "no user");
     if (user) {
-      currentUserId = user.uid;
-      userData = await loadUserData(currentUserId);
-      loginSection.style.display = "none";
-      appSection.style.display = "block";
-      renderMonths();
-      renderTable();
+      const email = user.email;
+      // ⚠️ غيري هذا الإيميل إلى إيميل المشرف الحقيقي
+      const ADMIN_EMAIL = "admin@example.com";
+      
+      if (email === ADMIN_EMAIL) {
+        showAdminView();
+      } else {
+        showStudentView(user.uid, email);
+      }
     } else {
-      currentUserId = null;
-      userData = {};
-      loginSection.style.display = "flex";
-      appSection.style.display = "none";
+      document.getElementById('authScreen').style.display = 'flex';
+      document.getElementById('appScreen').style.display = 'none';
     }
+  }
+
+  // ============================================================
+  // تهيئة شاشة تسجيل الدخول
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const logoutMainBtn = document.getElementById('logoutMainBtn');
+    const logoutBtnAdmin = document.getElementById('logoutBtnAdmin');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const authMsg = document.getElementById('authMsg');
+    
+    if (loginBtn) {
+      loginBtn.onclick = async () => {
+        try {
+          await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+          authMsg.textContent = '';
+        } catch (e) {
+          authMsg.textContent = '⚠️ ' + e.message;
+        }
+      };
+    }
+    
+    if (signupBtn) {
+      signupBtn.onclick = async () => {
+        if (loginPassword.value.length < 6) {
+          authMsg.textContent = '⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+          return;
+        }
+        try {
+          await createUserWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+          authMsg.textContent = '✅ تم إنشاء الحساب بنجاح!';
+        } catch (e) {
+          authMsg.textContent = '⚠️ ' + e.message;
+        }
+      };
+    }
+    
+    if (logoutMainBtn) {
+      logoutMainBtn.onclick = () => signOut(auth);
+    }
+    
+    if (logoutBtnAdmin) {
+      logoutBtnAdmin.onclick = () => signOut(auth);
+    }
+    
+    onAuthStateChanged(auth, onAuthChange);
   });
-  
-  console.log("✅ All systems ready");
 </script>
 </body>
 </html>
