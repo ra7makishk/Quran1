@@ -396,7 +396,7 @@
     .star-rating {
       display: flex;
       gap: 3px;
-      justify-content: center;
+      justifyContent: center;
       flex-wrap: nowrap;
     }
 
@@ -650,6 +650,22 @@
       margin-right: auto;
     }
 
+    /* ترحيب باسم المستخدم */
+    .welcome-header {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 10px 15px;
+      margin-bottom: 12px;
+      text-align: center;
+      border: 1.5px solid var(--pink-header);
+    }
+
+    .welcome-header span {
+      color: var(--pink-dark);
+      font-weight: bold;
+      font-size: 18px;
+    }
+
     /* استجابة للشاشات الصغيرة */
     @media (max-width: 550px) {
       body {
@@ -686,8 +702,13 @@
   <div class="auth-card">
     <div style="font-size: 48px; margin-bottom: 10px;">🌸</div>
     <h2>تسجيل الدخول</h2>
+    
+    <!-- حقل الاسم الجديد -->
+    <input type="text" id="signupName" placeholder="👤 الاسم (للحساب الجديد)" style="margin-bottom: 5px;">
+    
     <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني">
     <input type="password" id="loginPassword" placeholder="🔒 كلمة المرور">
+    
     <button id="loginBtn">✨ دخول</button>
     <button id="signupBtn">🆕 إنشاء حساب</button>
     <div id="authMsg" class="auth-msg"></div>
@@ -702,6 +723,11 @@
       <h1>🌸 برنامج متابعة حفظ القرآن الكريم 🌸</h1>
       <p>سجّلي تقدمك يوماً بيوم بإذن الله 💕</p>
       <div class="deco-row">🦋 🌷 💖 🌷 🦋</div>
+    </div>
+
+    <!-- ترحيب باسم المستخدم -->
+    <div class="welcome-header" id="welcomeHeader">
+      <span>🌸 مرحباً بكِ، <span id="userNameDisplay">...</span> 🌸</span>
     </div>
 
     <div class="stats-row" id="statsRow"></div>
@@ -747,7 +773,7 @@
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
-       </table>
+      </table>
     </div>
 
     <div class="bottom-deco">🎀 🌸 💝 🌸 🎀 🌸 💝 🌸 🎀</div>
@@ -762,7 +788,7 @@
   // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB05Tm0hfd1-RAiLzy0HwKSBFPIvDJqUJY",
@@ -867,6 +893,7 @@
   let currentPage = 0;
   let currentUserId = null;
   let currentUserEmail = null;
+  let currentUserName = null;
   let isAdmin = false;
   let viewingStudentId = null;
   let data = {};
@@ -893,9 +920,28 @@
     if (!userId) return;
     try {
       const docRef = doc(db, "students", userId);
-      await setDoc(docRef, { trackingData: newData, email: currentUserEmail }, { merge: true });
+      await setDoc(docRef, { 
+        trackingData: newData, 
+        email: currentUserEmail,
+        name: currentUserName 
+      }, { merge: true });
     } catch (e) {
       console.error("خطأ في الحفظ:", e);
+    }
+  }
+
+  async function updateUserName(userId, name) {
+    if (!userId) return;
+    try {
+      const docRef = doc(db, "students", userId);
+      await updateDoc(docRef, { name: name });
+    } catch (e) {
+      // لو الوثيقة لسه جديدة، بنستخدم setDoc
+      try {
+        await setDoc(docRef, { name: name, email: currentUserEmail }, { merge: true });
+      } catch (err) {
+        console.error("خطأ في تحديث الاسم:", err);
+      }
     }
   }
 
@@ -908,6 +954,7 @@
         const data = doc.data();
         students.push({
           id: doc.id,
+          name: data.name || data.email || doc.id,
           email: data.email || doc.id,
           trackingData: data.trackingData || {}
         });
@@ -916,6 +963,19 @@
     } catch (e) {
       console.error("خطأ في جلب الطلاب:", e);
       return [];
+    }
+  }
+
+  async function getUserName(userId) {
+    try {
+      const docRef = doc(db, "students", userId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data().name || docSnap.data().email || userId;
+      }
+      return userId;
+    } catch (e) {
+      return userId;
     }
   }
 
@@ -1245,6 +1305,13 @@
     isAdmin = false;
     viewingStudentId = null;
     
+    // جلب الاسم من Firebase
+    currentUserName = await getUserName(userId);
+    
+    // عرض الاسم في الترحيب
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    if (userNameDisplay) userNameDisplay.textContent = currentUserName || 'الطالبة';
+    
     const userData = await loadDataFromFirebase(userId);
     data = userData;
     
@@ -1277,7 +1344,7 @@
       allStudents.forEach(s => {
         const option = document.createElement('option');
         option.value = s.id;
-        option.textContent = s.email;
+        option.textContent = s.name + ' (' + (s.email || s.id) + ')';
         studentSelect.appendChild(option);
       });
       studentSelect.onchange = async () => {
@@ -1294,8 +1361,16 @@
             renderTable();
             updateStats();
             const adminMsg = document.getElementById('adminMsg');
-            if (adminMsg) adminMsg.innerHTML = `👩‍🏫 تعرض الآن بيانات: ${student.email}`;
+            if (adminMsg) adminMsg.innerHTML = `👩‍🏫 تعرض الآن بيانات: ${student.name || student.email}`;
+            
+            // عرض اسم الطالب في الترحيب للمشرف
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            if (userNameDisplay) userNameDisplay.textContent = student.name || 'الطالب';
           }
+        } else {
+          // لو رجع لاختيار افتراضي، يرجع يعرض اسم المشرف
+          const welcomeSpan = document.getElementById('userNameDisplay');
+          if (welcomeSpan) welcomeSpan.textContent = 'المشرفة';
         }
       };
     }
@@ -1308,7 +1383,7 @@
     console.log("Auth changed:", user ? user.email : "no user");
     if (user) {
       const email = user.email;
-      // ✅ إيميل المشرف المطلوب
+      // إيميل المشرف
       const ADMIN_EMAIL = "rahmakishk575@gmail.com";
       
       if (email === ADMIN_EMAIL) {
@@ -1332,6 +1407,7 @@
     const logoutBtnAdmin = document.getElementById('logoutBtnAdmin');
     const loginEmail = document.getElementById('loginEmail');
     const loginPassword = document.getElementById('loginPassword');
+    const signupName = document.getElementById('signupName');
     const authMsg = document.getElementById('authMsg');
     
     if (loginBtn) {
@@ -1347,12 +1423,18 @@
     
     if (signupBtn) {
       signupBtn.onclick = async () => {
+        if (!signupName.value.trim()) {
+          authMsg.textContent = '⚠️ الرجاء إدخال الاسم';
+          return;
+        }
         if (loginPassword.value.length < 6) {
           authMsg.textContent = '⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
           return;
         }
         try {
-          await createUserWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+          const userCredential = await createUserWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+          // حفظ الاسم في قاعدة البيانات
+          await updateUserName(userCredential.user.uid, signupName.value.trim());
           authMsg.textContent = '✅ تم إنشاء الحساب بنجاح!';
         } catch (e) {
           authMsg.textContent = '⚠️ ' + e.message;
