@@ -1,88 +1,586 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
-  <title>برنامج متابعة حفظ القرآن الكريم</title>
-  <meta name="theme-color" content="#FDE8F0"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>📖 برنامج متابعة حفظ القرآن</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Amiri', serif;
+      background: #FDF2F7;
+      direction: rtl;
+      padding: 10px;
+    }
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    /* شاشة تسجيل الدخول */
+    .login-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #FCE4EC, #F8BBD0);
+      padding: 15px;
+    }
+    .login-card {
+      background: white;
+      border-radius: 35px;
+      padding: 35px 25px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 35px rgba(212, 83, 126, 0.2);
+    }
+    .login-card h2 {
+      color: #D4537E;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+    .login-card input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: 2px solid #F4A7C3;
+      border-radius: 50px;
+      font-size: 16px;
+      font-family: 'Amiri';
+      background: #fff;
+      outline: none;
+      text-align: center;
+    }
+    .login-card button {
+      background: linear-gradient(135deg, #D4537E, #F07AA0);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-family: 'Amiri';
+      margin: 8px 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .login-card button:active {
+      transform: scale(0.97);
+    }
+    .login-card button:last-child {
+      background: #F4A7C3;
+    }
+    .error-msg {
+      color: #e74c3c;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    /* التطبيق الرئيسي */
+    .app-screen {
+      display: none;
+    }
+    .header {
+      background: linear-gradient(135deg, #F8BBD0, #FFD1B3);
+      border-radius: 25px;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .header h1 {
+      color: #72243E;
+      font-size: 22px;
+    }
+    .stats {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .stat-box {
+      background: white;
+      border-radius: 20px;
+      padding: 10px;
+      flex: 1;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #D4537E;
+    }
+    .progress-bar {
+      background: #FCE4EC;
+      border-radius: 20px;
+      height: 12px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #D4537E;
+      width: 0%;
+      height: 100%;
+      transition: width 0.3s;
+    }
+    .months-scroll {
+      overflow-x: auto;
+      margin: 10px 0;
+      white-space: nowrap;
+    }
+    .month-btn {
+      background: white;
+      border: 1.5px solid #F4A7C3;
+      padding: 8px 18px;
+      border-radius: 30px;
+      margin: 0 4px;
+      font-family: 'Amiri';
+      cursor: pointer;
+      display: inline-block;
+    }
+    .month-btn.active {
+      background: #D4537E;
+      color: white;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 20px;
+      background: white;
+    }
+    table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+    }
+    th {
+      background: #F4A7C3;
+      color: white;
+      padding: 10px;
+      white-space: nowrap;
+    }
+    td {
+      border: 1px solid #FCE4EC;
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .day-circle {
+      background: #D4537E;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .check-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #F4A7C3;
+      background: white;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .check-btn.done {
+      background: #D4537E;
+      color: white;
+    }
+    .star {
+      font-size: 22px;
+      cursor: pointer;
+      color: #ddd;
+    }
+    .star.active {
+      color: #F5C842;
+    }
+    textarea {
+      width: 100%;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid #F4A7C3;
+      font-family: 'Amiri';
+      resize: vertical;
+      background: #fff;
+    }
+    @media (max-width: 550px) {
+      .stat-number { font-size: 18px; }
+      .header h1 { font-size: 18px; }
+      td { padding: 5px; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ==================== شاشة تسجيل الدخول ==================== -->
-  <div id="authScreen" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--pink-bg); padding: 16px;">
-    <div style="background: white; padding: 2rem 1.5rem; border-radius: 32px; box-shadow: 0 20px 35px rgba(212,83,126,0.15); width: 100%; max-width: 400px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 10px;">🌸</div>
-      <h2 style="color: var(--pink-dark); margin-bottom: 25px; font-size: 24px;">تسجيل الدخول</h2>
-      <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" style="width: 100%; padding: 14px; margin: 8px 0; border-radius: 30px; border: 1.5px solid var(--pink-header); font-family: 'Amiri'; font-size: 16px; background: #fff; outline: none;">
-      <input type="password" id="loginPassword" placeholder="🔒 كلمة المرور" style="width: 100%; padding: 14px; margin: 8px 0; border-radius: 30px; border: 1.5px solid var(--pink-header); font-family: 'Amiri'; font-size: 16px; background: #fff; outline: none;">
-      <button id="loginBtn" style="background: linear-gradient(135deg, var(--pink-dark), var(--pink-mid)); color: white; border: none; padding: 14px 25px; border-radius: 40px; margin: 10px 5px; cursor: pointer; font-family: 'Amiri'; font-size: 17px; font-weight: bold; width: calc(50% - 10px);">✨ دخول</button>
-      <button id="signupBtn" style="background: var(--pink-header); color: white; border: none; padding: 14px 25px; border-radius: 40px; margin: 10px 5px; cursor: pointer; font-family: 'Amiri'; font-size: 17px; font-weight: bold; width: calc(50% - 10px);">🆕 إنشاء حساب</button>
-      <div id="authMsg" style="color: #d9534f; margin-top: 20px; font-size: 13px;"></div>
+<!-- شاشة تسجيل الدخول -->
+<div id="loginSection" class="login-screen">
+  <div class="login-card">
+    <h2>🌸 تسجيل الدخول</h2>
+    <input type="email" id="email" placeholder="📧 البريد الإلكتروني">
+    <input type="password" id="password" placeholder="🔒 كلمة المرور">
+    <button id="loginButton">✨ دخول</button>
+    <button id="signupButton">🆕 إنشاء حساب</button>
+    <div id="loginError" class="error-msg"></div>
+  </div>
+</div>
+
+<!-- التطبيق الأساسي -->
+<div id="appSection" class="app-screen">
+  <div class="container">
+    <div class="header">
+      <h1>🌸 برنامج متابعة حفظ القرآن 🌸</h1>
+      <p>سجّلي تقدمك يومًا بيوم 💕</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-box"><div class="stat-number" id="totalDone">0</div><div>الإنجاز</div></div>
+      <div class="stat-box"><div class="stat-number" id="totalPercent">0%</div><div>النسبة</div></div>
+      <div class="stat-box"><div class="stat-number" id="monthPercent">0%</div><div>نسبة الشهر</div></div>
+    </div>
+
+    <div class="progress-bar"><div class="progress-fill" id="globalProgress"></div></div>
+
+    <div class="months-scroll" id="monthsList"></div>
+
+    <div class="table-wrapper">
+      <table id="trackTable">
+        <thead>
+          <tr><th>اليوم</th><th>🕌 الحفظ</th><th>📖 مراجعة قريبة</th><th>📚 مراجعة بعيدة</th><th>📝 مراجعة عامة</th><th>✏️ تجويد</th><th>⭐ التقييم</th><th>🎧 الشيخ</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      能有
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+      <button id="logoutMain" style="background: #D4537E; color: white; border: none; padding: 8px 25px; border-radius: 30px;">🚪 تسجيل خروج</button>
     </div>
   </div>
+</div>
 
-  <!-- ==================== التطبيق الرئيسي ==================== -->
-  <div id="appScreen" style="display: none;">
-    <div class="wrapper">
+<script type="module">
+  // -------------------- Firebase --------------------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB05Tm0hfd1-RAiLzy0HwKSBFPIvDJqUJY",
+    authDomain: "quran-tracker-918f1.firebaseapp.com",
+    projectId: "quran-tracker-918f1",
+    storageBucket: "quran-tracker-918f1.firebasestorage.app",
+    messagingSenderId: "339579551055",
+    appId: "1:339579551055:web:dffc513af8b75a0005d93a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  console.log("✅ Firebase ready");
+
+  // -------------------- بيانات الأشهر --------------------
+  const MONTHS = [
+    "ذو القعدة", "ذو الحجة", "محرم", "صفر", "ربيع الأول", "ربيع الثاني",
+    "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان", "رمضان", "شوال"
+  ];
+  const DAYS_IN_MONTH = [30, 30, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29];
+
+  let currentUserId = null;
+  let currentMonthIndex = 0;
+  let userData = {};  // تخزين مؤقت لبيانات المستخدم
+
+  // -------------------- تحميل وحفظ البيانات --------------------
+  async function loadUserData(userId) {
+    if (!userId) return {};
+    try {
+      const docRef = doc(db, "students", userId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data().trackingData || {};
+      }
+      return {};
+    } catch(e) {
+      console.error("خطأ بالتحميل:", e);
+      return {};
+    }
+  }
+
+  async function saveUserData(userId, dataObj) {
+    if (!userId) return;
+    try {
+      const docRef = doc(db, "students", userId);
+      await setDoc(docRef, { trackingData: dataObj, email: auth.currentUser?.email }, { merge: true });
+    } catch(e) {
+      console.error("خطأ بالحفظ:", e);
+    }
+  }
+
+  // -------------------- دوال الحصول على القيم --------------------
+  function getValue(day, field) {
+    const key = `m${currentMonthIndex}_d${day}_${field}`;
+    return userData[key] || "";
+  }
+
+  async function setValue(day, field, val) {
+    const key = `m${currentMonthIndex}_d${day}_${field}`;
+    if (userData[key] === val) return;
+    userData[key] = val;
+    await saveUserData(currentUserId, userData);
+    renderTable();
+    updateStatistics();
+  }
+
+  // -------------------- واجهة المستخدم --------------------
+  function updateStatistics() {
+    let totalChecked = 0;
+    let totalItems = 0;
+    let monthChecked = 0;
+    let monthItems = 0;
+    const currentDays = DAYS_IN_MONTH[currentMonthIndex];
+    
+    for (let m = 0; m < MONTHS.length; m++) {
+      const days = DAYS_IN_MONTH[m];
+      for (let d = 1; d <= days; d++) {
+        const rev_close = getValueFromMonth(m, d, "rev_close");
+        const sheikh = getValueFromMonth(m, d, "sheikh");
+        totalItems += 2;
+        if (rev_close === "1") totalChecked++;
+        if (sheikh === "1") totalChecked++;
+        
+        if (m === currentMonthIndex) {
+          monthItems += 2;
+          if (rev_close === "1") monthChecked++;
+          if (sheikh === "1") monthChecked++;
+        }
+      }
+    }
+    
+    let totalPercent = totalItems ? Math.round((totalChecked / totalItems) * 100) : 0;
+    let monthPercent = monthItems ? Math.round((monthChecked / monthItems) * 100) : 0;
+    
+    document.getElementById("totalDone").innerHTML = `🌟 ${totalChecked}`;
+    document.getElementById("totalPercent").innerHTML = `${totalPercent}%`;
+    document.getElementById("monthPercent").innerHTML = `${monthPercent}%`;
+    document.getElementById("globalProgress").style.width = totalPercent + "%";
+  }
+  
+  function getValueFromMonth(monthIdx, day, field) {
+    const key = `m${monthIdx}_d${day}_${field}`;
+    return userData[key] || "";
+  }
+  
+  // بناء الجدول
+  function renderTable() {
+    const tbody = document.getElementById("tableBody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    const daysCount = DAYS_IN_MONTH[currentMonthIndex];
+    
+    for (let day = 1; day <= daysCount; day++) {
+      const row = tbody.insertRow();
       
-      <div class="title-bar">
-        <div class="deco-row top-deco">🎀 ✨ 🎀 ✨ 🎀</div>
-        <h1>🌸 برنامج متابعة حفظ القرآن الكريم 🌸</h1>
-        <p>سجّلي تقدمك يوماً بيوم بإذن الله 💕</p>
-        <div class="deco-row">🦋 🌷 💖 🌷 🦋</div>
-      </div>
-
-      <div class="stats-row" id="statsRow"></div>
-
-      <div class="progress-wrap">
-        <span class="progress-label" id="progressLabel">0%</span>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
-
-      <!-- ==================== لوحة المشرف ==================== -->
-      <div id="adminPanel" style="display: none; background: var(--blush); padding: 12px; border-radius: 20px; margin-bottom: 15px;">
-        <h3 style="color: var(--pink-dark); margin-bottom: 8px; font-size: 16px;">👩‍🏫 لوحة المشرف</h3>
-        <select id="studentSelect" style="width: 100%; padding: 10px; border-radius: 30px; font-family: 'Amiri'; font-size: 14px; border: 1px solid var(--pink-header); background: white;">
-          <option value="">-- اختر طالباً --</option>
-        </select>
-        <div id="adminMsg" style="margin-top: 8px; color: var(--pink-dark); font-size: 12px;"></div>
-        <button id="logoutBtnAdmin" style="margin-top: 10px; background: var(--pink-dark); color: white; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-family: 'Amiri'; font-size: 14px;">🚪 تسجيل خروج</button>
-      </div>
-
-      <div class="month-tabs-wrap">
-        <div class="month-tabs" id="monthTabs"></div>
-      </div>
-
-      <div class="tabs" id="tabs"></div>
-
-      <div class="table-scroll">
-        <table id="mainTable">
-          <thead>
-            <tr>
-              <th>اليوم</th>
-              <th>🕌 الحفظ</th>
-              <th>📖 قريبة</th>
-              <th>📚 بعيدة</th>
-              <th>📝 عامة</th>
-              <th>✏️ تجويد</th>
-              <th>⭐ التقييم</th>
-              <th>🎧 الشيخ</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-
-      <div class="bottom-deco">🎀 🌸 💝 🌸 🎀 🌸 💝 🌸 🎀</div>
-    </div>
-  </div>
-
-  <script type="module" src="firebase-script.js"></script>
+      // اليوم
+      const tdDay = row.insertCell(0);
+      const circle = document.createElement("div");
+      circle.className = "day-circle";
+      circle.innerText = day;
+      tdDay.appendChild(circle);
+      
+      // الحفظ
+      const tdSave = row.insertCell(1);
+      const textarea = document.createElement("textarea");
+      textarea.rows = 1;
+      textarea.placeholder = "ما حفظته...";
+      textarea.value = getValue(day, "hafiz");
+      textarea.oninput = async (e) => {
+        await setValue(day, "hafiz", e.target.value);
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+      };
+      setTimeout(() => {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+      }, 10);
+      tdSave.appendChild(textarea);
+      
+      // مراجعة قريبة
+      const tdRevClose = row.insertCell(2);
+      const closeBtn = document.createElement("div");
+      closeBtn.className = "check-btn" + (getValue(day, "rev_close") === "1" ? " done" : "");
+      closeBtn.innerText = getValue(day, "rev_close") === "1" ? "✓" : "";
+      closeBtn.onclick = async () => {
+        const newVal = getValue(day, "rev_close") === "1" ? "" : "1";
+        await setValue(day, "rev_close", newVal);
+        closeBtn.classList.toggle("done");
+        closeBtn.innerText = newVal === "1" ? "✓" : "";
+      };
+      tdRevClose.appendChild(closeBtn);
+      
+      // مراجعة بعيدة
+      const tdRevFar = row.insertCell(3);
+      const farText = document.createElement("textarea");
+      farText.rows = 1;
+      farText.placeholder = "الأحزاب...";
+      farText.value = getValue(day, "hizb");
+      farText.oninput = async (e) => {
+        await setValue(day, "hizb", e.target.value);
+        farText.style.height = "auto";
+        farText.style.height = farText.scrollHeight + "px";
+      };
+      setTimeout(() => {
+        farText.style.height = "auto";
+        farText.style.height = farText.scrollHeight + "px";
+      }, 10);
+      tdRevFar.appendChild(farText);
+      
+      // مراجعة عامة
+      const tdGeneral = row.insertCell(4);
+      const generalText = document.createElement("textarea");
+      generalText.rows = 1;
+      generalText.placeholder = "ملاحظات عامة...";
+      generalText.value = getValue(day, "rev_gen");
+      generalText.oninput = async (e) => {
+        await setValue(day, "rev_gen", e.target.value);
+        generalText.style.height = "auto";
+        generalText.style.height = generalText.scrollHeight + "px";
+      };
+      setTimeout(() => {
+        generalText.style.height = "auto";
+        generalText.style.height = generalText.scrollHeight + "px";
+      }, 10);
+      tdGeneral.appendChild(generalText);
+      
+      // تجويد
+      const tdTajweed = row.insertCell(5);
+      const tajweedText = document.createElement("textarea");
+      tajweedText.rows = 1;
+      tajweedText.placeholder = "ملاحظات التجويد...";
+      tajweedText.value = getValue(day, "notes");
+      tajweedText.oninput = async (e) => {
+        await setValue(day, "notes", e.target.value);
+        tajweedText.style.height = "auto";
+        tajweedText.style.height = tajweedText.scrollHeight + "px";
+      };
+      setTimeout(() => {
+        tajweedText.style.height = "auto";
+        tajweedText.style.height = tajweedText.scrollHeight + "px";
+      }, 10);
+      tdTajweed.appendChild(tajweedText);
+      
+      // النجوم
+      const tdStars = row.insertCell(6);
+      const starsContainer = document.createElement("div");
+      starsContainer.style.display = "flex";
+      starsContainer.style.gap = "3px";
+      starsContainer.style.justifyContent = "center";
+      const currentStars = parseInt(getValue(day, "stars")) || 0;
+      for (let s = 1; s <= 5; s++) {
+        const starSpan = document.createElement("span");
+        starSpan.className = "star" + (s <= currentStars ? " active" : "");
+        starSpan.innerHTML = "★";
+        starSpan.onclick = async () => {
+          await setValue(day, "stars", s.toString());
+          renderTable();
+        };
+        starsContainer.appendChild(starSpan);
+      }
+      tdStars.appendChild(starsContainer);
+      
+      // سماع الشيخ
+      const tdSheikh = row.insertCell(7);
+      const sheikhBtn = document.createElement("div");
+      sheikhBtn.className = "check-btn" + (getValue(day, "sheikh") === "1" ? " done" : "");
+      sheikhBtn.innerText = getValue(day, "sheikh") === "1" ? "✓" : "";
+      sheikhBtn.onclick = async () => {
+        const newVal = getValue(day, "sheikh") === "1" ? "" : "1";
+        await setValue(day, "sheikh", newVal);
+        sheikhBtn.classList.toggle("done");
+        sheikhBtn.innerText = newVal === "1" ? "✓" : "";
+      };
+      tdSheikh.appendChild(sheikhBtn);
+    }
+    updateStatistics();
+  }
+  
+  // عرض الشهور
+  function renderMonths() {
+    const container = document.getElementById("monthsList");
+    if (!container) return;
+    container.innerHTML = "";
+    MONTHS.forEach((month, idx) => {
+      const btn = document.createElement("div");
+      btn.className = "month-btn" + (idx === currentMonthIndex ? " active" : "");
+      btn.innerText = month;
+      btn.onclick = () => {
+        currentMonthIndex = idx;
+        renderMonths();
+        renderTable();
+      };
+      container.appendChild(btn);
+    });
+  }
+  
+  // -------------------- تسجيل الدخول والخروج --------------------
+  const loginSection = document.getElementById("loginSection");
+  const appSection = document.getElementById("appSection");
+  const loginBtn = document.getElementById("loginButton");
+  const signupBtn = document.getElementById("signupButton");
+  const logoutBtn = document.getElementById("logoutMain");
+  const emailInput = document.getElementById("email");
+  const passInput = document.getElementById("password");
+  const errorDiv = document.getElementById("loginError");
+  
+  loginBtn.onclick = async () => {
+    errorDiv.innerText = "جاري الدخول...";
+    try {
+      await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
+      errorDiv.innerText = "";
+    } catch(e) {
+      errorDiv.innerText = "فشل الدخول: " + e.message;
+    }
+  };
+  
+  signupBtn.onclick = async () => {
+    if (passInput.value.length < 6) {
+      errorDiv.innerText = "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
+      return;
+    }
+    errorDiv.innerText = "جاري إنشاء الحساب...";
+    try {
+      await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
+      errorDiv.innerText = "تم إنشاء الحساب بنجاح!";
+    } catch(e) {
+      errorDiv.innerText = "خطأ: " + e.message;
+    }
+  };
+  
+  logoutBtn.onclick = async () => {
+    await signOut(auth);
+  };
+  
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUserId = user.uid;
+      userData = await loadUserData(currentUserId);
+      loginSection.style.display = "none";
+      appSection.style.display = "block";
+      renderMonths();
+      renderTable();
+    } else {
+      currentUserId = null;
+      userData = {};
+      loginSection.style.display = "flex";
+      appSection.style.display = "none";
+    }
+  });
+  
+  console.log("✅ All systems ready");
+</script>
 </body>
 </html>
