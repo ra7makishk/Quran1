@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"/>
+  <title>برنامج متابعة حفظ القرآن الكريم</title>
+  <meta name="theme-color" content="#FDE8F0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ==================== شاشة تسجيل الدخول ==================== -->
+  <div id="authScreen" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--pink-bg); padding: 16px;">
+    <div style="background: white; padding: 2rem 1.5rem; border-radius: 32px; box-shadow: 0 20px 35px rgba(212,83,126,0.15); width: 100%; max-width: 400px; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 10px;">🌸</div>
+      <h2 style="color: var(--pink-dark); margin-bottom: 25px; font-size: 24px;">تسجيل الدخول</h2>
+      <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" style="width: 100%; padding: 14px; margin: 8px 0; border-radius: 30px; border: 1.5px solid var(--pink-header); font-family: 'Amiri'; font-size: 16px; background: #fff; outline: none;">
+      <input type="password" id="loginPassword" placeholder="🔒 كلمة المرور" style="width: 100%; padding: 14px; margin: 8px 0; border-radius: 30px; border: 1.5px solid var(--pink-header); font-family: 'Amiri'; font-size: 16px; background: #fff; outline: none;">
+      <button id="loginBtn" style="background: linear-gradient(135deg, var(--pink-dark), var(--pink-mid)); color: white; border: none; padding: 14px 25px; border-radius: 40px; margin: 10px 5px; cursor: pointer; font-family: 'Amiri'; font-size: 17px; font-weight: bold; width: calc(50% - 10px);">✨ دخول</button>
+      <button id="signupBtn" style="background: var(--pink-header); color: white; border: none; padding: 14px 25px; border-radius: 40px; margin: 10px 5px; cursor: pointer; font-family: 'Amiri'; font-size: 17px; font-weight: bold; width: calc(50% - 10px);">🆕 إنشاء حساب</button>
+      <div id="authMsg" style="color: #d9534f; margin-top: 20px; font-size: 13px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== التطبيق الرئيسي ==================== -->
+  <div id="appScreen" style="display: none;">
+    <div class="wrapper">
+      
+      <div class="title-bar">
+        <div class="deco-row top-deco">🎀 ✨ 🎀 ✨ 🎀</div>
+        <h1>🌸 برنامج متابعة حفظ القرآن الكريم 🌸</h1>
+        <p>سجّلي تقدمك يوماً بيوم بإذن الله 💕</p>
+        <div class="deco-row">🦋 🌷 💖 🌷 🦋</div>
+      </div>
+
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="progress-wrap">
+        <span class="progress-label" id="progressLabel">0%</span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- ==================== لوحة المشرف ==================== -->
+      <div id="adminPanel" style="display: none; background: var(--blush); padding: 12px; border-radius: 20px; margin-bottom: 15px;">
+        <h3 style="color: var(--pink-dark); margin-bottom: 8px; font-size: 16px;">👩‍🏫 لوحة المشرف</h3>
+        <select id="studentSelect" style="width: 100%; padding: 10px; border-radius: 30px; font-family: 'Amiri'; font-size: 14px; border: 1px solid var(--pink-header); background: white;">
+          <option value="">-- اختر طالباً --</option>
+        </select>
+        <div id="adminMsg" style="margin-top: 8px; color: var(--pink-dark); font-size: 12px;"></div>
+        <button id="logoutBtnAdmin" style="margin-top: 10px; background: var(--pink-dark); color: white; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-family: 'Amiri'; font-size: 14px;">🚪 تسجيل خروج</button>
+      </div>
+
+      <div class="month-tabs-wrap">
+        <div class="month-tabs" id="monthTabs"></div>
+      </div>
+
+      <div class="tabs" id="tabs"></div>
+
+      <div class="table-scroll">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th>اليوم</th>
+              <th>🕌 الحفظ</th>
+              <th>📖 قريبة</th>
+              <th>📚 بعيدة</th>
+              <th>📝 عامة</th>
+              <th>✏️ تجويد</th>
+              <th>⭐ التقييم</th>
+              <th>🎧 الشيخ</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="bottom-deco">🎀 🌸 💝 🌸 🎀 🌸 💝 🌸 🎀</div>
+    </div>
+  </div>
+
+  <script type="module" src="firebase-script.js"></script>
+</body>
+</html>

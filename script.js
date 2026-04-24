@@ -1,0 +1,638 @@
+// ============================================================
+// إعدادات Firebase
+// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB05Tm0hfd1-RAiLzy0HwKSBFPIvDJqUJY",
+  authDomain: "quran-tracker-918f1.firebaseapp.com",
+  projectId: "quran-tracker-918f1",
+  storageBucket: "quran-tracker-918f1.firebasestorage.app",
+  messagingSenderId: "339579551055",
+  appId: "1:339579551055:web:dffc513af8b75a0005d93a",
+  measurementId: "G-XNG5G4PMYW"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+console.log("✅ Firebase initialized successfully");
+
+// ============================================================
+// بيانات الأحزاب
+// ============================================================
+const AHZAB = [
+  'الحزب 1  — الفاتحة : بسم الله الرحمن الرحيم',
+  'الحزب 2  — البقرة : أفتطمعون أن يؤمنوا لكم',
+  'الحزب 3  — البقرة : سيقول السفهاء من الناس ما ولاهم',
+  'الحزب 4  — البقرة : واذكروا الله في أيام معدودات',
+  'الحزب 5  — البقرة : تلك الرسل فضلنا بعضهم على بعض',
+  'الحزب 6  — آل عمران : قل أؤنبئكم بخير من ذلكم للذين اتقوا',
+  'الحزب 7  — آل عمران : كل الطعام كان حلا لبني إسرائيل',
+  'الحزب 8  — آل عمران : يستبشرون بنعمة من الله وفضل',
+  'الحزب 9  — النساء : والمحصنات من النساء إلا ما ملكت أيمانكم',
+  'الحزب 10 — النساء : فما لكم في المنافقين فئتين والله أركسهم',
+  'الحزب 11 — النساء : لا يحب الله الجهر بالسوء من القول',
+  'الحزب 12 — المائدة : واتل عليهم نبأ ابني آدم بالحق',
+  'الحزب 13 — المائدة : لتجدن أشد الناس عداوة للذين آمنوا اليهود',
+  'الحزب 14 — الأنعام : إنما يستجيب الذين يسمعون والموتى يبعثهم الله',
+  'الحزب 15 — الأنعام : ولو أننا نزلنا إليهم الملائكة وكلمهم الموتى',
+  'الحزب 16 — الأعراف : المص، كتاب أنزل إليك',
+  'الحزب 17 — الأعراف : قال الملأ الذين استكبروا من قومه لنخرجنك',
+  'الحزب 18 — الأعراف : وإذ نتقنا الجبل فوقهم كأنه ظلة',
+  'الحزب 19 — الأنفال : واعلموا أنما غنمتم من شيء فأن لله خمسه',
+  'الحزب 20 — التوبة : يا أيها الذين آمنوا إن كثيرا من الأحبار',
+  'الحزب 21 — التوبة : إنما السبيل على الذين يستأذنونك وهم أغنياء',
+  'الحزب 22 — يونس : للذين أحسنوا الحسنى وزيادة',
+  'الحزب 23 — هود : وما من دابة في الأرض إلا على الله رزقها',
+  'الحزب 24 — هود : وإلى مدين أخاهم شعيبا',
+  'الحزب 25 — يوسف : وما أبرئ نفسي إن النفس لأمارة بالسوء',
+  'الحزب 26 — الرعد : أفمن يعلم أنما أنزل إليك من ربك الحق',
+  'الحزب 27 — الحجر : الر تلك آيات الكتاب وقرآن مبين',
+  'الحزب 28 — النحل : وقال الله لا تتخذوا إلهين اثنين',
+  'الحزب 29 — الإسراء : سبحان الذي أسرى بعبده ليلا',
+  'الحزب 30 — الإسراء : أولم يروا أن الله الذي خلق السماوات',
+  'الحزب 31 — الكهف : قال ألم أقل لك إنك لن تستطيع',
+  'الحزب 32 — طه : طه، ما أنزلنا عليك القرآن لتشقى',
+  'الحزب 33 — الأنبياء : اقترب للناس حسابهم وهم في غفلة معرضون',
+  'الحزب 34 — الحج : يا أيها الناس اتقوا ربكم إن زلزلة',
+  'الحزب 35 — المؤمنون : قد أفلح المؤمنون، الذين هم في',
+  'الحزب 36 — النور : يا أيها الذين آمنوا لا تتبعوا خطوات',
+  'الحزب 37 — الفرقان : وقال الذين لا يرجون لقاءنا',
+  'الحزب 38 — الشعراء : قالوا أنؤمن لك واتبعك الأرذلون',
+  'الحزب 39 — النمل : فما كان جواب قومه إلا أن قالوا',
+  'الحزب 40 — القصص : ولقد وصلنا لهم القول لعلهم يتذكرون',
+  'الحزب 41 — العنكبوت : ولا تجادلوا أهل الكتاب إلا بالتي هي أحسن',
+  'الحزب 42 — لقمان : ومن يسلم وجهه إلى الله وهو محسن',
+  'الحزب 43 — الأحزاب : ومن يقنت منكن لله ورسوله وتعمل صالحا',
+  'الحزب 44 — سبأ : قل من يرزقكم من السماوات والأرض',
+  'الحزب 45 — يس : وما أنزلنا على قومه من بعده من جند',
+  'الحزب 46 — الصافات : فنبذناه بالعراء وهو سقيم',
+  'الحزب 47 — الزمر : فمن أظلم ممن كذب على الله وكذب',
+  'الحزب 48 — غافر : ويا قوم ما لي أدعوكم إلى النجاة',
+  'الحزب 49 — فصلت : إليه يرد علم الساعة',
+  'الحزب 50 — الزخرف : قال أولو جئتكم بأهدى مما وجدتم',
+  'الحزب 51 — الأحقاف : حم، تنزيل الكتاب من الله العزيز الحكيم',
+  'الحزب 52 — الفتح : لقد رضي الله عن المؤمنين إذ يبايعونك',
+  'الحزب 53 — الذاريات : قال فما خطبكم أيها المرسلون',
+  'الحزب 54 — الرحمن : الرحمن، علم القرآن',
+  'الحزب 55 — المجادلة : قد سمع الله قول التي تجادلك',
+  'الحزب 56 — الجمعة : يسبح لله ما في السماوات وما في الأرض',
+  'الحزب 57 — الملك : تبارك الذي بيده الملك',
+  'الحزب 58 — الجن : قل أوحي إلي أنه استمع نفر من الجن',
+  'الحزب 59 — النبأ : عم يتساءلون، عن النبإ العظيم',
+  'الحزب 60 — الأعلى : سبح اسم ربك الأعلى، الذي خلق فسوى',
+];
+
+const MONTHS = [
+  { name: 'ذو القعدة',    emoji: '🌙', days: 30 },
+  { name: 'ذو الحجة',     emoji: '🕌', days: 30 },
+  { name: 'محرم',          emoji: '🌟', days: 30 },
+  { name: 'صفر',           emoji: '🌸', days: 29 },
+  { name: 'ربيع الأول',   emoji: '🌺', days: 30 },
+  { name: 'ربيع الثاني',  emoji: '🌷', days: 29 },
+  { name: 'جمادى الأولى', emoji: '💕', days: 30 },
+  { name: 'جمادى الثانية',emoji: '🎀', days: 29 },
+  { name: 'رجب',           emoji: '✨', days: 30 },
+  { name: 'شعبان',         emoji: '💫', days: 29 },
+  { name: 'رمضان',         emoji: '🌙', days: 30 },
+  { name: 'شوال',          emoji: '🎉', days: 29 },
+];
+
+function getPagesForMonth(totalDays) {
+  const pages = [];
+  pages.push({ label: '🌸 الأيام ١–١٠', start: 1, end: 10 });
+  pages.push({ label: '💕 الأيام ١١–٢٠', start: 11, end: 20 });
+  const endLabel = totalDays === 30 ? '٣٠' : '٢٩';
+  pages.push({ label: `🎀 الأيام ٢١–${endLabel}`, start: 21, end: totalDays });
+  return pages;
+}
+
+// ============================================================
+// متغيرات عامة
+// ============================================================
+let currentMonth = 0;
+let currentPage = 0;
+let currentUserId = null;
+let currentUserEmail = null;
+let isAdmin = false;
+let allStudents = [];
+let viewingStudentId = null;
+let data = {};
+
+// ============================================================
+// دوال Firebase
+// ============================================================
+async function loadDataFromFirebase(userId) {
+  if (!userId) return {};
+  try {
+    const docRef = doc(db, "students", userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data().trackingData || {};
+    }
+    return {};
+  } catch (e) {
+    console.error("خطأ في التحميل:", e);
+    return {};
+  }
+}
+
+async function saveDataToFirebase(userId, newData) {
+  if (!userId) return;
+  try {
+    const docRef = doc(db, "students", userId);
+    await setDoc(docRef, { trackingData: newData, email: currentUserEmail }, { merge: true });
+  } catch (e) {
+    console.error("خطأ في الحفظ:", e);
+  }
+}
+
+async function loadAllStudents() {
+  if (!isAdmin) return [];
+  try {
+    const querySnapshot = await getDocs(collection(db, "students"));
+    const students = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      students.push({
+        id: doc.id,
+        email: data.email || doc.id,
+        trackingData: data.trackingData || {}
+      });
+    });
+    return students;
+  } catch (e) {
+    console.error("خطأ في جلب الطلاب:", e);
+    return [];
+  }
+}
+
+// ============================================================
+// دوال البيانات
+// ============================================================
+function getVal(month, day, col) {
+  const key = `m${month}_d${day}_${col}`;
+  return data[key] || '';
+}
+
+async function setVal(month, day, col, val) {
+  const key = `m${month}_d${day}_${col}`;
+  if (data[key] === val) return;
+  data[key] = val;
+  const userId = viewingStudentId || currentUserId;
+  if (userId) {
+    await saveDataToFirebase(userId, data);
+  }
+  updateStats();
+}
+
+// ============================================================
+// دوال واجهة المستخدم
+// ============================================================
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function makeCheckbox(month, day, col) {
+  const wrap = document.createElement('div');
+  wrap.className = 'check-wrap';
+  const box = document.createElement('div');
+  box.className = 'checkbox-custom' + (getVal(month, day, col) === '1' ? ' checked' : '');
+  box.textContent = getVal(month, day, col) === '1' ? '💗' : '';
+  box.addEventListener('click', async () => {
+    const checked = box.classList.toggle('checked');
+    box.textContent = checked ? '💗' : '';
+    await setVal(month, day, col, checked ? '1' : '');
+  });
+  wrap.appendChild(box);
+  return wrap;
+}
+
+function makeStars(month, day, col) {
+  const wrap = document.createElement('div');
+  wrap.className = 'star-rating';
+  const current = parseInt(getVal(month, day, col)) || 0;
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement('span');
+    star.className = 'star' + (i <= current ? ' filled' : '');
+    star.textContent = '★';
+    star.addEventListener('click', async () => {
+      await setVal(month, day, col, String(i));
+      const allStars = wrap.querySelectorAll('.star');
+      allStars.forEach((s, idx) => s.classList.toggle('filled', idx < i));
+    });
+    wrap.appendChild(star);
+  }
+  return wrap;
+}
+
+function makeHizbSelect(month, day, col) {
+  const savedRaw = getVal(month, day, col);
+  const saved = savedRaw ? JSON.parse(savedRaw) : [];
+  const wrap = document.createElement('div');
+  wrap.className = 'hizb-wrap';
+  const btn = document.createElement('button');
+  btn.className = 'hizb-btn';
+  btn.type = 'button';
+  
+  function updateBtnLabel() {
+    const currentVals = getVal(month, day, col) ? JSON.parse(getVal(month, day, col)) : [];
+    if (currentVals.length === 0) {
+      btn.innerHTML = '<span class="hizb-placeholder">اختاري الحزب 🌸</span><span class="hizb-arrow">▼</span>';
+    } else {
+      const nums = currentVals.map(i => AHZAB[i].match(/الحزب\s+[\d٠-٩]+/)[0]).join(' + ');
+      btn.innerHTML = `<span class="hizb-selected">${nums}</span><span class="hizb-arrow">▼</span>`;
+    }
+  }
+  updateBtnLabel();
+  
+  const panel = document.createElement('div');
+  panel.className = 'hizb-panel hidden';
+  const search = document.createElement('input');
+  search.type = 'text';
+  search.className = 'hizb-search';
+  search.placeholder = '🔍 ابحثي...';
+  panel.appendChild(search);
+  const list = document.createElement('ul');
+  list.className = 'hizb-list';
+  
+  function buildList(filter = '') {
+    list.innerHTML = '';
+    AHZAB.forEach((hizb, idx) => {
+      if (filter && !hizb.includes(filter)) return;
+      const currentVals = getVal(month, day, col) ? JSON.parse(getVal(month, day, col)) : [];
+      const li = document.createElement('li');
+      li.className = 'hizb-item' + (currentVals.includes(idx) ? ' selected' : '');
+      const chk = document.createElement('span');
+      chk.className = 'hizb-chk';
+      chk.textContent = currentVals.includes(idx) ? '💗' : '○';
+      const lbl = document.createElement('span');
+      lbl.textContent = hizb;
+      li.appendChild(chk);
+      li.appendChild(lbl);
+      li.addEventListener('click', async () => {
+        let vals = getVal(month, day, col) ? JSON.parse(getVal(month, day, col)) : [];
+        if (vals.includes(idx)) {
+          vals = vals.filter(v => v !== idx);
+        } else {
+          vals.push(idx);
+          vals.sort((a, b) => a - b);
+        }
+        await setVal(month, day, col, JSON.stringify(vals));
+        buildList(search.value);
+        updateBtnLabel();
+      });
+      list.appendChild(li);
+    });
+  }
+  buildList();
+  search.addEventListener('input', () => buildList(search.value));
+  panel.appendChild(list);
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = !panel.classList.contains('hidden');
+    document.querySelectorAll('.hizb-panel').forEach(p => p.classList.add('hidden'));
+    if (!isOpen) panel.classList.remove('hidden');
+  });
+  document.addEventListener('click', () => panel.classList.add('hidden'));
+  panel.addEventListener('click', e => e.stopPropagation());
+  wrap.appendChild(btn);
+  wrap.appendChild(panel);
+  return wrap;
+}
+
+function makeFieldWithDone(month, day, fieldCol, doneCol, type, placeholder) {
+  const wrap = document.createElement('div');
+  wrap.className = 'field-done-wrap';
+  let field;
+  if (type === 'textarea' || type === 'notes') {
+    field = document.createElement('textarea');
+    field.className = type === 'notes' ? 'notes-textarea' : 'wide-textarea';
+    field.placeholder = placeholder;
+    field.value = getVal(month, day, fieldCol);
+    field.rows = 1;
+    field.addEventListener('input', async () => {
+      await setVal(month, day, fieldCol, field.value);
+      autoResize(field);
+    });
+    requestAnimationFrame(() => autoResize(field));
+  } else if (type === 'hizb') {
+    field = makeHizbSelect(month, day, fieldCol);
+  }
+  const doneRow = document.createElement('div');
+  doneRow.className = 'done-row';
+  const isHafiz = doneCol === 'hafiz_done';
+  const doneBox = document.createElement('div');
+  const isDone = getVal(month, day, doneCol) === '1';
+  doneBox.className = 'done-check' + (isHafiz ? ' coffee-check' : '') + (isDone ? ' done' : '');
+  doneBox.textContent = isDone ? (isHafiz ? '☕' : '✓') : (isHafiz ? '🤍' : '');
+  const doneLbl = document.createElement('span');
+  doneLbl.className = 'done-lbl';
+  doneLbl.textContent = 'تم ✅';
+  doneBox.addEventListener('click', async () => {
+    const nowDone = doneBox.classList.toggle('done');
+    doneBox.textContent = nowDone ? (isHafiz ? '☕' : '✓') : (isHafiz ? '🤍' : '');
+    await setVal(month, day, doneCol, nowDone ? '1' : '');
+  });
+  doneLbl.addEventListener('click', () => doneBox.click());
+  doneRow.appendChild(doneBox);
+  doneRow.appendChild(doneLbl);
+  wrap.appendChild(field);
+  wrap.appendChild(doneRow);
+  return wrap;
+}
+
+function renderMonthTabs() {
+  const container = document.getElementById('monthTabs');
+  if (!container) return;
+  container.innerHTML = '';
+  MONTHS.forEach((m, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'month-tab-btn' + (idx === currentMonth ? ' active' : '');
+    btn.innerHTML = `${m.emoji} ${m.name}`;
+    btn.addEventListener('click', () => {
+      currentMonth = idx;
+      currentPage = 0;
+      renderMonthTabs();
+      renderPageTabs();
+      renderTable();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function renderPageTabs() {
+  const container = document.getElementById('tabs');
+  if (!container) return;
+  container.innerHTML = '';
+  const pages = getPagesForMonth(MONTHS[currentMonth].days);
+  pages.forEach((page, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (idx === currentPage ? ' active' : '');
+    btn.textContent = page.label;
+    btn.addEventListener('click', () => {
+      currentPage = idx;
+      renderPageTabs();
+      renderTable();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const pages = getPagesForMonth(MONTHS[currentMonth].days);
+  const { start, end } = pages[currentPage];
+  for (let day = start; day <= end; day++) {
+    const tr = document.createElement('tr');
+    const tdDay = document.createElement('td');
+    const circle = document.createElement('div');
+    circle.className = 'day-circle';
+    circle.textContent = day;
+    tdDay.appendChild(circle);
+    tr.appendChild(tdDay);
+    
+    const tdHafiz = document.createElement('td');
+    tdHafiz.classList.add('td-wide');
+    tdHafiz.appendChild(makeFieldWithDone(currentMonth, day, 'hafiz', 'hafiz_done', 'textarea', 'اكتبي ما حفظتِه... 🌸'));
+    tr.appendChild(tdHafiz);
+    
+    const tdRevClose = document.createElement('td');
+    tdRevClose.appendChild(makeCheckbox(currentMonth, day, 'rev_close'));
+    tr.appendChild(tdRevClose);
+    
+    const tdRevFar = document.createElement('td');
+    tdRevFar.classList.add('td-wide');
+    tdRevFar.appendChild(makeFieldWithDone(currentMonth, day, 'hizb', 'hizb_done', 'hizb', ''));
+    tr.appendChild(tdRevFar);
+    
+    const tdRevGen = document.createElement('td');
+    tdRevGen.classList.add('td-wide');
+    tdRevGen.appendChild(makeFieldWithDone(currentMonth, day, 'rev_gen', 'rev_gen_done', 'textarea', 'اكتبي ملاحظات المراجعة... 💕'));
+    tr.appendChild(tdRevGen);
+    
+    const tdNotes = document.createElement('td');
+    tdNotes.classList.add('td-notes');
+    tdNotes.appendChild(makeFieldWithDone(currentMonth, day, 'notes', 'notes_done', 'notes', 'اكتبي ملاحظات التجويد... ✏️'));
+    tr.appendChild(tdNotes);
+    
+    const tdStars = document.createElement('td');
+    tdStars.appendChild(makeStars(currentMonth, day, 'stars'));
+    tr.appendChild(tdStars);
+    
+    const tdSheikh = document.createElement('td');
+    tdSheikh.appendChild(makeCheckbox(currentMonth, day, 'sheikh'));
+    tr.appendChild(tdSheikh);
+    
+    tbody.appendChild(tr);
+  }
+}
+
+function updateStats() {
+  let done = 0, total = 0, starsSum = 0, starsCount = 0;
+  MONTHS.forEach((m, mIdx) => {
+    for (let day = 1; day <= m.days; day++) {
+      ['rev_close', 'sheikh'].forEach(col => {
+        total++;
+        if (getVal(mIdx, day, col) === '1') done++;
+      });
+      const s = parseInt(getVal(mIdx, day, 'stars'));
+      if (s > 0) { starsSum += s; starsCount++; }
+    }
+  });
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  const avgStr = starsCount > 0 ? (starsSum / starsCount).toFixed(1) : '—';
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  if (progressFill) progressFill.style.width = pct + '%';
+  if (progressLabel) progressLabel.textContent = pct + '%';
+  
+  let mDone = 0, mTotal = 0;
+  const m = MONTHS[currentMonth];
+  for (let day = 1; day <= m.days; day++) {
+    ['rev_close', 'sheikh'].forEach(col => {
+      mTotal++;
+      if (getVal(currentMonth, day, col) === '1') mDone++;
+    });
+  }
+  const mPct = mTotal > 0 ? Math.round((mDone / mTotal) * 100) : 0;
+  const statsRow = document.getElementById('statsRow');
+  if (statsRow) {
+    statsRow.innerHTML = `
+      <div class="stat-card"><div class="stat-num">🌟 ${done}</div><div class="stat-lbl">إجمالي الإنجاز</div></div>
+      <div class="stat-card"><div class="stat-num">💖 ${pct}%</div><div class="stat-lbl">نسبة السنة</div></div>
+      <div class="stat-card"><div class="stat-num">📅 ${mPct}%</div><div class="stat-lbl">نسبة الشهر</div></div>
+      <div class="stat-card"><div class="stat-num">⭐ ${avgStr}</div><div class="stat-lbl">متوسط التجويد</div></div>
+    `;
+  }
+}
+
+// ============================================================
+// دوال تسجيل الدخول والمشرف
+// ============================================================
+async function showStudentView(userId, email) {
+  currentUserId = userId;
+  currentUserEmail = email;
+  isAdmin = false;
+  viewingStudentId = null;
+  
+  const userData = await loadDataFromFirebase(userId);
+  data = userData;
+  
+  const adminPanel = document.getElementById('adminPanel');
+  if (adminPanel) adminPanel.style.display = 'none';
+  
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  
+  currentMonth = 0;
+  currentPage = 0;
+  renderMonthTabs();
+  renderPageTabs();
+  renderTable();
+  updateStats();
+}
+
+async function showAdminView() {
+  isAdmin = true;
+  currentUserId = null;
+  
+  allStudents = await loadAllStudents();
+  
+  const adminPanel = document.getElementById('adminPanel');
+  if (adminPanel) adminPanel.style.display = 'block';
+  
+  const studentSelect = document.getElementById('studentSelect');
+  if (studentSelect) {
+    studentSelect.innerHTML = '<option value="">-- اختر طالباً --</option>';
+    allStudents.forEach(s => {
+      const option = document.createElement('option');
+      option.value = s.id;
+      option.textContent = s.email;
+      studentSelect.appendChild(option);
+    });
+    studentSelect.onchange = async () => {
+      const selectedId = studentSelect.value;
+      if (selectedId) {
+        const student = allStudents.find(s => s.id === selectedId);
+        if (student) {
+          viewingStudentId = selectedId;
+          data = student.trackingData || {};
+          currentMonth = 0;
+          currentPage = 0;
+          renderMonthTabs();
+          renderPageTabs();
+          renderTable();
+          updateStats();
+          const adminMsg = document.getElementById('adminMsg');
+          if (adminMsg) adminMsg.innerHTML = `👩‍🏫 تعرض الآن بيانات: ${student.email}`;
+        }
+      }
+    };
+  }
+  
+  const logoutBtn = document.getElementById('logoutBtnAdmin');
+  if (logoutBtn) {
+    logoutBtn.onclick = () => signOut(auth);
+  }
+  
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+}
+
+function onAuthChange(user) {
+  console.log("Auth state changed:", user ? user.email : "no user");
+  if (user) {
+    const email = user.email;
+    const ADMIN_EMAIL = "admin@example.com"; // غيري هذا إلى إيميل المشرف
+    
+    if (email === ADMIN_EMAIL) {
+      showAdminView();
+    } else {
+      showStudentView(user.uid, email);
+    }
+  } else {
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('appScreen').style.display = 'none';
+  }
+}
+
+// ============================================================
+// تهيئة شاشة تسجيل الدخول
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM loaded, setting up auth buttons");
+  
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const loginEmail = document.getElementById('loginEmail');
+  const loginPassword = document.getElementById('loginPassword');
+  const authMsg = document.getElementById('authMsg');
+  
+  if (!loginBtn || !signupBtn) {
+    console.error("Buttons not found!");
+    return;
+  }
+  
+  loginBtn.onclick = async () => {
+    console.log("Login button clicked");
+    const email = loginEmail.value;
+    const password = loginPassword.value;
+    
+    if (!email || !password) {
+      authMsg.textContent = '⚠️ الرجاء إدخال البريد الإلكتروني وكلمة المرور';
+      return;
+    }
+    
+    try {
+      authMsg.textContent = 'جاري تسجيل الدخول...';
+      await signInWithEmailAndPassword(auth, email, password);
+      authMsg.textContent = '✅ تم تسجيل الدخول بنجاح!';
+    } catch (e) {
+      console.error("Login error:", e);
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+        authMsg.textContent = '⚠️ البريد الإلكتروني أو كلمة المرور غير صحيحة';
+      } else {
+        authMsg.textContent = '⚠️ خطأ: ' + e.message;
+      }
+    }
+  };
+  
+  signupBtn.onclick = async () => {
+    console.log("Signup button clicked");
+    const email = loginEmail.value;
+    const password = loginPassword.value;
+    
+    if (!email || !password) {
+      authMsg.textContent = '⚠️ الرجاء ملء البريد الإلكتروني وكلمة المرور';
+      return;
+    }
+    
+    if (password.length < 6) {
+      authMsg.textContent = '⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+      return;
+    }
+    
+    try {
+      authMsg.textContent = 'جاري إنشاء الحساب...';
+      await createUserWithEmailAndPassword(auth, email, password);
+      authMsg.textContent = '✅ تم إنشاء الحساب بنجاح! يمكنك الدخول الآن.';
+    } catch (e) {
+      console.error("Signup error:", e);
+      if (e.code === 'auth/email-already-in-use') {
+        authMsg.textContent = '⚠️ هذا البريد الإلكتروني مسجل بالفعل، جربي تسجيل الدخول';
+      } else {
+        authMsg.textContent = '⚠️ خطأ: ' + e.message;
+      }
+    }
+  };
+  
+  onAuthStateChanged(auth, onAuthChange);
+});
