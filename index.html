@@ -8,6 +8,7 @@
   <title>🤎 برنامج متابعة حفظ القرآن الكريم</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* نفس الـ CSS الموجود عندك - لم يتغير */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -38,6 +39,7 @@
       padding: 10px;
     }
 
+    /* باقي الـ CSS كما هو ... */
     .hadith-cloud {
       background: linear-gradient(135deg, #FFF9F2, #FDF5EA);
       border-radius: 35px;
@@ -473,7 +475,6 @@
       color: var(--white);
     }
 
-    /* ===== تقييم النجوم ===== */
     .star-rating {
       display: flex;
       gap: 3px;
@@ -489,7 +490,6 @@
       user-select: none;
     }
 
-    /* النجوم قابلة للنقر للأدمن فقط */
     .star.admin-star {
       cursor: pointer;
     }
@@ -502,7 +502,6 @@
       color: var(--nude-gold);
     }
 
-    /* تلميح للطالب أن النجوم للأدمن فقط */
     .stars-readonly-hint {
       font-size: 9px;
       color: var(--nude-mauve);
@@ -877,8 +876,7 @@
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
       onAuthStateChanged,
-      signOut,
-      sendEmailVerification
+      signOut
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import {
       getFirestore,
@@ -1154,21 +1152,18 @@
         star.textContent = '★';
 
         if (isAdmin) {
-          // الأدمن: النجوم قابلة للنقر
           star.classList.add('admin-star');
           star.onclick = async () => {
             await setVal(month, day, col, String(i));
             starsRow.querySelectorAll('.star').forEach((s, idx) => s.classList.toggle('filled', idx < i));
           };
         }
-        // الطالب: لا يوجد onclick — النجوم للعرض فقط
 
         starsRow.appendChild(star);
       }
 
       wrap.appendChild(starsRow);
 
-      // تلميح للطالب فقط
       if (!isAdmin) {
         const hint = document.createElement('span');
         hint.className = 'stars-readonly-hint';
@@ -1391,7 +1386,6 @@
         tdNotes.appendChild(makeFieldWithDone(currentMonth, day, 'notes', 'notes_done', 'notes', 'اكتبي ملاحظات التجويد... ✏️'));
         tr.appendChild(tdNotes);
 
-        // عمود النجوم
         const tdStars = document.createElement('td');
         tdStars.appendChild(makeStars(currentMonth, day, 'stars'));
         tr.appendChild(tdStars);
@@ -1559,7 +1553,7 @@
     };
 
     // ==============================
-    // تسجيل الدخول / الخروج
+    // تسجيل الدخول / الخروج - بدون تحقق من البريد
     // ==============================
     const authMsg = document.getElementById('authMsg');
 
@@ -1569,20 +1563,7 @@
       if (!email || !pass) { authMsg.textContent = '⚠️ أدخلي البريد وكلمة المرور'; return; }
       authMsg.textContent = 'جاري الدخول...';
       try {
-        const userCred = await signInWithEmailAndPassword(auth, email, pass);
-        if (!isAdminEmail(email) && !userCred.user.emailVerified) {
-          await signOut(auth);
-          authMsg.innerHTML = '⚠️ لم يتم التحقق من بريدك الإلكتروني بعد.<br>تفقدي صندوق الوارد واضغطي على رابط التأكيد 📧<br><button id="resendBtn" style="margin-top:8px;background:var(--nude-dark);color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;font-family:Amiri,serif">إعادة إرسال رابط التحقق</button>';
-          document.getElementById('resendBtn').onclick = async () => {
-            try {
-              const tmpCred = await signInWithEmailAndPassword(auth, email, pass);
-              await sendEmailVerification(tmpCred.user);
-              await signOut(auth);
-              authMsg.textContent = '✅ تم إرسال رابط التحقق مجدداً، تفقدي بريدك 📧';
-            } catch(e) { authMsg.textContent = '⚠️ خطأ: ' + e.message; }
-          };
-          return;
-        }
+        await signInWithEmailAndPassword(auth, email, pass);
         authMsg.textContent = '';
       } catch (e) {
         authMsg.textContent = '⚠️ بيانات خاطئة، تحققي من البريد وكلمة المرور';
@@ -1607,9 +1588,7 @@
           trackingData: {},
           createdAt: new Date().toISOString()
         });
-        await sendEmailVerification(userCred.user);
-        await signOut(auth);
-        authMsg.innerHTML = '✅ تم إنشاء الحساب بنجاح! 🎉<br>📧 تم إرسال رابط التحقق لبريدك الإلكتروني<br><strong>افتحي الإيميل واضغطي على الرابط قبل تسجيل الدخول</strong>';
+        authMsg.innerHTML = '✅ تم إنشاء الحساب بنجاح! 🎉<br>يمكنك الآن تسجيل الدخول مباشرة';
         document.getElementById('signupName').value = '';
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginPassword').value = '';
