@@ -38,7 +38,6 @@
       padding: 10px;
     }
 
-    /* ===== غيمة الحديث ===== */
     .hadith-cloud {
       background: linear-gradient(135deg, #FFF9F2, #FDF5EA);
       border-radius: 35px;
@@ -80,7 +79,6 @@
       color: var(--nude-dark);
     }
 
-    /* ===== عداد التسبيح ===== */
     .tasbeeh-container {
       background: var(--white);
       border-radius: 50px;
@@ -132,7 +130,6 @@
       font-size: 12px;
     }
 
-    /* ===== شاشة تسجيل الدخول ===== */
     .auth-screen {
       display: flex;
       justify-content: center;
@@ -241,7 +238,6 @@
       margin: 5px 0;
     }
 
-    /* ===== بطاقة الترحيب ===== */
     .welcome-header {
       background: var(--white);
       border-radius: 20px;
@@ -254,7 +250,6 @@
       font-weight: bold;
     }
 
-    /* ===== الإحصائيات ===== */
     .stats-row {
       display: flex;
       gap: 8px;
@@ -286,7 +281,6 @@
       margin-top: 3px;
     }
 
-    /* ===== شريط التقدم ===== */
     .progress-wrap {
       display: flex;
       align-items: center;
@@ -321,7 +315,6 @@
       transition: width 0.4s ease;
     }
 
-    /* ===== تبويبات الشهور ===== */
     .month-tabs-wrap {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -357,7 +350,6 @@
       font-weight: 700;
     }
 
-    /* ===== تبويبات الأيام ===== */
     .tabs {
       display: flex;
       gap: 6px;
@@ -384,7 +376,6 @@
       box-shadow: 0 3px 10px rgba(139, 109, 79, 0.2);
     }
 
-    /* ===== الجدول ===== */
     .table-scroll {
       overflow-x: auto;
       border-radius: 16px;
@@ -435,7 +426,6 @@
       vertical-align: middle;
     }
 
-    /* ===== دائرة اليوم ===== */
     .day-circle {
       width: 32px;
       height: 32px;
@@ -451,7 +441,6 @@
       box-shadow: 0 2px 8px rgba(139, 109, 79, 0.2);
     }
 
-    /* ===== صناديق الاختيار ===== */
     .check-wrap {
       display: flex;
       justify-content: center;
@@ -494,13 +483,18 @@
 
     .star {
       font-size: clamp(16px, 4.5vw, 20px);
-      cursor: pointer;
+      cursor: default;
       color: #E8DDD0;
       transition: transform 0.1s;
       user-select: none;
     }
 
-    .star:active {
+    /* النجوم قابلة للنقر للأدمن فقط */
+    .star.admin-star {
+      cursor: pointer;
+    }
+
+    .star.admin-star:active {
       transform: scale(1.2);
     }
 
@@ -508,7 +502,15 @@
       color: var(--nude-gold);
     }
 
-    /* ===== Textareas ===== */
+    /* تلميح للطالب أن النجوم للأدمن فقط */
+    .stars-readonly-hint {
+      font-size: 9px;
+      color: var(--nude-mauve);
+      display: block;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
     .wide-textarea,
     .notes-textarea {
       width: 100%;
@@ -543,7 +545,6 @@
       width: 13%;
     }
 
-    /* ===== حقل مع زر تم ===== */
     .field-done-wrap {
       display: flex;
       flex-direction: column;
@@ -607,7 +608,6 @@
       user-select: none;
     }
 
-    /* ===== قائمة الأحزاب ===== */
     .hizb-wrap {
       position: relative;
       min-width: 100px;
@@ -698,7 +698,6 @@
       text-align: center;
     }
 
-    /* ===== لوحة المشرف ===== */
     .admin-panel {
       background: var(--nude-blush);
       padding: 12px;
@@ -774,18 +773,15 @@
 
 <body>
 
-  <!-- غيمة الحديث النبوي -->
   <div class="hadith-cloud">
     <div class="hadith-label">💚 الحديث الشريف 💚</div>
     <div class="hadith-text" id="hadithMessage">"خيركم من تعلم القرآن وعلمه"</div>
   </div>
 
-  <!-- غيمة الرسائل الإيمانية -->
   <div id="messageCloud" class="message-cloud">
     <div class="message-text" id="inspirationalMessage">💝 لا تدع اليأس يستولي عليك... فـ عتمة قلبك الصغيرة سينيرها الله لك</div>
   </div>
 
-  <!-- عداد التسبيح -->
   <div class="tasbeeh-container">
     <span class="tasbeeh-text">🕋 سبحان الله وبحمده 🕋</span>
     <span class="tasbeeh-count" id="tasbeehCount">0</span>
@@ -793,7 +789,6 @@
     <button class="tasbeeh-reset" id="tasbeehReset">🔄 إعادة تعيين</button>
   </div>
 
-  <!-- شاشة تسجيل الدخول -->
   <div id="authScreen" class="auth-screen">
     <div class="auth-card">
       <div style="font-size: 48px;">🤎</div>
@@ -807,7 +802,6 @@
     </div>
   </div>
 
-  <!-- التطبيق الرئيسي -->
   <div id="appScreen" class="app-screen">
     <div class="wrapper">
 
@@ -825,7 +819,6 @@
         <div class="deco-row">🌸 🌷 💖 🌷 🌸</div>
       </div>
 
-      <!-- بطاقة الترحيب - تعرض الاسم فقط من Firestore -->
       <div class="welcome-header">
         🌸 مرحباً، <span id="userNameDisplay">...</span> 🌸
       </div>
@@ -839,7 +832,6 @@
         </div>
       </div>
 
-      <!-- لوحة المشرف -->
       <div id="adminPanel" class="admin-panel">
         <h3>👩‍🏫 لوحة المشرف</h3>
         <select id="studentSelect">
@@ -849,15 +841,12 @@
         <div id="adminMsg" style="margin-top: 8px; font-size: 12px; color: var(--nude-dark);"></div>
       </div>
 
-      <!-- تبويبات الشهور -->
       <div class="month-tabs-wrap">
         <div class="month-tabs" id="monthTabs"></div>
       </div>
 
-      <!-- تبويبات الأيام -->
       <div class="tabs" id="tabs"></div>
 
-      <!-- الجدول -->
       <div class="table-scroll">
         <table id="mainTable">
           <thead>
@@ -914,9 +903,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const ADMIN_EMAIL = "af2.af20@gmail.com"; // دايماً lowercase للمقارنة
+    const ADMIN_EMAIL = "af2.af20@gmail.com";
 
-    // دالة مساعدة للمقارنة بدون حساسية للحروف
     function isAdminEmail(email) {
       return email && email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
     }
@@ -939,9 +927,6 @@
       "💚 عن عبد الله بن عمرو قال: قال رسول الله صلى الله عليه وسلم: (يقال لصاحب القران اقرأ وارتق ورتل كما كنت ترتل في الدنيا فإن منزلتك عند آخر آية تقرؤها)"
     ];
 
-    // ==============================
-    // رسائل إيمانية
-    // ==============================
     const INSPIRATIONAL_MESSAGES = [
       "💝 لا تدع اليأس يستولي عليك … فـ عتمة قلبك الصغيرة سينيرها الله لك ثق بذلك تمامًا♥️✨",
       "🌿 ابدأ يومك باليقين بأن الله الذي يسوق السحاب ليمطر أرضاً قاحلة قادر على أن يسوق الفرج لقلبك المنهك",
@@ -972,7 +957,6 @@
       "🕋 كُل أحلامك المخبأة في صدرك، سيعطيها الله مخرجاً للنور، الخيرُ قادم وصوتُ دعائك مسموع"
     ];
 
-    // عرض حديث وتحفيز عشوائي
     function showRandomHadith() {
       const el = document.getElementById('hadithMessage');
       if (el) el.innerHTML = HADITH_LIST[Math.floor(Math.random() * HADITH_LIST.length)];
@@ -1038,14 +1022,11 @@
     // ==============================
     // دوال Firebase
     // ==============================
-
-    // جلب اسم المستخدم من Firestore (اسمه المسجّل فقط، ليس الـ ID)
     async function getUserNameFromFirestore(userId) {
       try {
         const docSnap = await getDoc(doc(db, "students", userId));
         if (docSnap.exists()) {
           const d = docSnap.data();
-          // نرجع الاسم المسجّل فقط، وليس الـ UID أو الإيميل
           return d.name && d.name.trim() !== '' ? d.name.trim() : null;
         }
         return null;
@@ -1066,7 +1047,6 @@
     async function saveDataToFirebase(userId, newData) {
       if (!userId) return;
       try {
-        // نجيب البيانات الموجودة أولاً عشان ما نمسحش الاسم والإيميل
         const existing = await getDoc(doc(db, "students", userId));
         const existingData = existing.exists() ? existing.data() : {};
         await setDoc(doc(db, "students", userId), {
@@ -1078,14 +1058,12 @@
       }
     }
 
-    // جلب كل الطلاب (باستثناء الأدمن)
     async function loadAllStudents() {
       try {
         const querySnapshot = await getDocs(collection(db, "students"));
         const students = [];
         querySnapshot.forEach((docSnap) => {
           const d = docSnap.data();
-          // استثناء الأدمن بمقارنة غير حساسة للحروف
           if (isAdminEmail(d.email)) return;
           students.push({
             id: docSnap.id,
@@ -1094,12 +1072,11 @@
             trackingData: d.trackingData || {}
           });
         });
-        console.log('تم جلب ' + students.length + ' طالب');
         return students;
       } catch (e) {
         console.error('خطأ في جلب الطلاب:', e);
         const adminMsg = document.getElementById('adminMsg');
-        if (adminMsg) adminMsg.innerHTML = 'خطأ في جلب الطلاب: ' + e.message + ' - تحققي من Firestore Rules';
+        if (adminMsg) adminMsg.innerHTML = 'خطأ في جلب الطلاب: ' + e.message;
         return [];
       }
     }
@@ -1126,7 +1103,6 @@
       const key = `m${month}_d${day}_${col}`;
       if (data[key] === val) return;
       data[key] = val;
-      // الأدمن يحفظ على الطالب المحدد، والطالب يحفظ على نفسه
       const saveId = viewingStudentId || currentUserId;
       await saveDataToFirebase(saveId, data);
       renderTable();
@@ -1157,20 +1133,49 @@
       return wrap;
     }
 
+    // ==============================
+    // ⭐ النجوم: للأدمن فقط
+    // ==============================
     function makeStars(month, day, col) {
       const wrap = document.createElement('div');
-      wrap.className = 'star-rating';
+      wrap.style.display = 'flex';
+      wrap.style.flexDirection = 'column';
+      wrap.style.alignItems = 'center';
+      wrap.style.gap = '2px';
+
+      const starsRow = document.createElement('div');
+      starsRow.className = 'star-rating';
+
       const current = parseInt(getVal(month, day, col)) || 0;
+
       for (let i = 1; i <= 5; i++) {
         const star = document.createElement('span');
         star.className = 'star' + (i <= current ? ' filled' : '');
         star.textContent = '★';
-        star.onclick = async () => {
-          await setVal(month, day, col, String(i));
-          wrap.querySelectorAll('.star').forEach((s, idx) => s.classList.toggle('filled', idx < i));
-        };
-        wrap.appendChild(star);
+
+        if (isAdmin) {
+          // الأدمن: النجوم قابلة للنقر
+          star.classList.add('admin-star');
+          star.onclick = async () => {
+            await setVal(month, day, col, String(i));
+            starsRow.querySelectorAll('.star').forEach((s, idx) => s.classList.toggle('filled', idx < i));
+          };
+        }
+        // الطالب: لا يوجد onclick — النجوم للعرض فقط
+
+        starsRow.appendChild(star);
       }
+
+      wrap.appendChild(starsRow);
+
+      // تلميح للطالب فقط
+      if (!isAdmin) {
+        const hint = document.createElement('span');
+        hint.className = 'stars-readonly-hint';
+        hint.textContent = '👩‍🏫 تقييم المشرفة';
+        wrap.appendChild(hint);
+      }
+
       return wrap;
     }
 
@@ -1355,7 +1360,6 @@
       for (let day = start; day <= end; day++) {
         const tr = document.createElement('tr');
 
-        // اليوم
         const tdDay = document.createElement('td');
         const circle = document.createElement('div');
         circle.className = 'day-circle';
@@ -1363,41 +1367,35 @@
         tdDay.appendChild(circle);
         tr.appendChild(tdDay);
 
-        // الحفظ
         const tdHafiz = document.createElement('td');
         tdHafiz.classList.add('td-wide');
         tdHafiz.appendChild(makeFieldWithDone(currentMonth, day, 'hafiz', 'hafiz_done', 'textarea', 'اكتبي ما حفظتِه... 🌸'));
         tr.appendChild(tdHafiz);
 
-        // المراجعة القريبة
         const tdRevClose = document.createElement('td');
         tdRevClose.appendChild(makeCheckbox(currentMonth, day, 'rev_close'));
         tr.appendChild(tdRevClose);
 
-        // المراجعة البعيدة
         const tdRevFar = document.createElement('td');
         tdRevFar.classList.add('td-wide');
         tdRevFar.appendChild(makeFieldWithDone(currentMonth, day, 'hizb', 'hizb_done', 'hizb', ''));
         tr.appendChild(tdRevFar);
 
-        // المراجعة العامة
         const tdRevGen = document.createElement('td');
         tdRevGen.classList.add('td-wide');
         tdRevGen.appendChild(makeFieldWithDone(currentMonth, day, 'rev_gen', 'rev_gen_done', 'textarea', 'اكتبي ملاحظات المراجعة... 💕'));
         tr.appendChild(tdRevGen);
 
-        // ملاحظات التجويد
         const tdNotes = document.createElement('td');
         tdNotes.classList.add('td-notes');
         tdNotes.appendChild(makeFieldWithDone(currentMonth, day, 'notes', 'notes_done', 'notes', 'اكتبي ملاحظات التجويد... ✏️'));
         tr.appendChild(tdNotes);
 
-        // تقييم التجويد
+        // عمود النجوم
         const tdStars = document.createElement('td');
         tdStars.appendChild(makeStars(currentMonth, day, 'stars'));
         tr.appendChild(tdStars);
 
-        // سماع الشيخ
         const tdSheikh = document.createElement('td');
         tdSheikh.appendChild(makeCheckbox(currentMonth, day, 'sheikh'));
         tr.appendChild(tdSheikh);
@@ -1450,11 +1448,8 @@
       viewingStudentId = null;
       viewingStudentName = null;
 
-      // جلب الاسم من Firestore - الاسم المسجّل وليس الـ ID
       const name = await getUserNameFromFirestore(userId);
       currentUserName = name || auth.currentUser?.email || 'الطالبة';
-
-      // عرض الاسم في الترحيب
       document.getElementById('userNameDisplay').textContent = currentUserName;
 
       data = await loadDataFromFirebase(userId);
@@ -1478,27 +1473,20 @@
       isAdmin = true;
       currentUserId = userId;
 
-      // جلب اسم المشرف من Firestore
       const adminName = await getUserNameFromFirestore(userId);
       currentUserName = adminName || 'المشرفة';
-
-
-
-      // عرض اسم المشرف في الترحيب
       document.getElementById('userNameDisplay').textContent = currentUserName + ' 👩‍🏫';
 
       document.getElementById('adminPanel').style.display = 'block';
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('appScreen').style.display = 'block';
 
-      // جلب قائمة الطلاب
       const adminMsg = document.getElementById('adminMsg');
       if (adminMsg) adminMsg.innerHTML = 'جاري تحميل بيانات الطلاب...';
 
       allStudents = await loadAllStudents();
       populateStudentSelect();
 
-      // إذا في طلاب، عرض أول طالب تلقائياً
       if (allStudents.length > 0) {
         await selectStudent(allStudents[0].id);
         document.getElementById('studentSelect').value = allStudents[0].id;
@@ -1518,7 +1506,7 @@
       allStudents.forEach(s => {
         const opt = document.createElement('option');
         opt.value = s.id;
-        opt.textContent = s.name; // عرض الاسم فقط، ليس الـ ID
+        opt.textContent = s.name;
         select.appendChild(opt);
       });
     }
@@ -1529,13 +1517,11 @@
       viewingStudentId = student.id;
       viewingStudentName = student.name;
       data = student.trackingData || {};
-      // عرض اسم المشرف واسم الطالب معاً
       document.getElementById('userNameDisplay').textContent = `${currentUserName} 👩‍🏫 — تعرض: ${student.name}`;
       currentMonth = 0; currentPage = 0;
       renderMonthTabs(); renderPageTabs(); renderTable(); updateStats();
     }
 
-    // أحداث لوحة المشرف
     document.getElementById('studentSelect').onchange = async function () {
       if (this.value) {
         await selectStudent(this.value);
@@ -1584,7 +1570,6 @@
       authMsg.textContent = 'جاري الدخول...';
       try {
         const userCred = await signInWithEmailAndPassword(auth, email, pass);
-        // الأدمن يدخل مباشرة بدون تحقق
         if (!isAdminEmail(email) && !userCred.user.emailVerified) {
           await signOut(auth);
           authMsg.innerHTML = '⚠️ لم يتم التحقق من بريدك الإلكتروني بعد.<br>تفقدي صندوق الوارد واضغطي على رابط التأكيد 📧<br><button id="resendBtn" style="margin-top:8px;background:var(--nude-dark);color:white;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;font-family:Amiri,serif">إعادة إرسال رابط التحقق</button>';
@@ -1616,16 +1601,13 @@
       authMsg.textContent = 'جاري إنشاء الحساب...';
       try {
         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-        // حفظ الاسم في Firestore
         await setDoc(doc(db, "students", userCred.user.uid), {
           name: name,
           email: email,
           trackingData: {},
           createdAt: new Date().toISOString()
         });
-        // إرسال إيميل التحقق
         await sendEmailVerification(userCred.user);
-        // تسجيل خروج فوري حتى تتحقق أولاً
         await signOut(auth);
         authMsg.innerHTML = '✅ تم إنشاء الحساب بنجاح! 🎉<br>📧 تم إرسال رابط التحقق لبريدك الإلكتروني<br><strong>افتحي الإيميل واضغطي على الرابط قبل تسجيل الدخول</strong>';
         document.getElementById('signupName').value = '';
